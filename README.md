@@ -2,9 +2,9 @@
 
 ![MaxPilot - Photo de la carte assemblée / Assembled board photo](images/photo.jpg)
 
-**FR** | MaxPilot est une carte open-source qui permet de **contrôler vos radiateurs électriques depuis votre téléphone ou votre ordinateur**, via Home Assistant. Elle se branche sur le fil pilote de vos radiateurs et commande le mode de chauffage (Confort, Éco, Hors-gel, Arrêt) en WiFi. Plus besoin de programmateur mural : vous gérez tout depuis votre domotique.
+**FR** | MaxPilot est une carte open-source qui permet de **contrôler vos radiateurs électriques depuis votre téléphone ou votre ordinateur**, via Home Assistant. Elle se branche sur le fil pilote de vos radiateurs et commande le mode de chauffage (Confort, Éco, Hors-gel, Arrêt) en WiFi. Plus besoin de programmateur mural : vous gérez tout depuis votre domotique. Conçue autour de composants **peu coûteux et facilement disponibles** (WeMos D1 Mini ~3 €, optocoupleurs, MOSFETs), elle est accessible à tout amateur d'électronique.
 
-**EN** | MaxPilot is an open-source board that lets you **control your electric radiators from your phone or computer**, via Home Assistant. It connects to your radiators' "fil pilote" (pilot wire) and sets the heating mode (Comfort, Eco, Frost protection, Off) over WiFi. No more wall-mounted programmer: manage everything from your smart home.
+**EN** | MaxPilot is an open-source board that lets you **control your electric radiators from your phone or computer**, via Home Assistant. It connects to your radiators' "fil pilote" (pilot wire) and sets the heating mode (Comfort, Eco, Frost protection, Off) over WiFi. No more wall-mounted programmer: manage everything from your smart home. Built around **low-cost, widely available components** (WeMos D1 Mini ~€3, optocouplers, MOSFETs), it is accessible to any electronics hobbyist.
 
 ---
 
