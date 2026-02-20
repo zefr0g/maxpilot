@@ -4,6 +4,11 @@ substitutions:
   ssr1_pin: D3
   ssr2_pin: D7
   uptime_name: "Uptime Sensor"
+  # Room temperature sensor from Home Assistant (optional).
+  # Replace with your HA entity ID, e.g. "sensor.temperature_salon"
+  # Set to "none" and temp_sensor_internal to "true" to disable.
+  temp_sensor_entity: "none"
+  temp_sensor_internal: "true"
 
 packages:
   core: !include common/core.yaml

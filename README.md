@@ -218,6 +218,9 @@ substitutions:
   ch_name: "CH1"
   ssr1_pin: D3
   ssr2_pin: D7
+  # Capteur de température optionnel / Optional temperature sensor
+  temp_sensor_entity: "none"       # ou / or "sensor.temperature_salon"
+  temp_sensor_internal: "true"     # "false" pour activer / to enable
 
 packages:
   core: !include common/core.yaml
@@ -231,7 +234,22 @@ esphome:
 **FR** | Les fichiers `common/` contiennent la configuration partagée (WiFi, capteurs, logique fil pilote). Adaptez-les à votre installation.
 **EN** | The `common/` files contain shared configuration (WiFi, sensors, fil pilote logic). Adapt them to your setup.
 
-### 3. Flasher / Flash
+### 3. Capteur de température (optionnel) / Temperature sensor (optional)
+
+**FR** | Si vous avez un capteur de température dans la pièce (Zigbee, BLE, WiFi...), vous pouvez l'importer dans MaxPilot depuis Home Assistant. La température sera affichée à côté du sélecteur fil pilote. Modifiez les substitutions dans votre fichier de configuration :
+
+**EN** | If you have a room temperature sensor (Zigbee, BLE, WiFi...), you can import it into MaxPilot from Home Assistant. The temperature will be displayed alongside the fil pilote selector. Edit the substitutions in your config file:
+
+```yaml
+substitutions:
+  temp_sensor_entity: "sensor.temperature_salon"  # votre entity ID HA / your HA entity ID
+  temp_sensor_internal: "false"
+```
+
+**FR** | Voir `maxpilot_ch1_with_temp.yaml.example` pour un exemple complet.
+**EN** | See `maxpilot_ch1_with_temp.yaml.example` for a complete example.
+
+### 4. Flasher / Flash
 
 **FR** | Branchez le D1 Mini en USB sur votre ordinateur, puis :
 **EN** | Plug the D1 Mini via USB to your computer, then:
@@ -250,19 +268,11 @@ esphome run maxpilot_ch1.yaml --device maxpilot_ch1.local
 
 **FR**
 
-Une fois le firmware flashé et la carte alimentée, le périphérique MaxPilot apparaît automatiquement dans Home Assistant via la découverte ESPHome. Vous trouverez deux interrupteurs :
+Une fois le firmware flashé et la carte alimentée, le périphérique MaxPilot apparaît automatiquement dans Home Assistant via la découverte ESPHome. Vous trouverez une entité **select** :
 
-- **SSR 1 CH1** — contrôle l'alternance positive (hors-gel)
-- **SSR 2 CH1** — contrôle l'alternance négative (arrêt)
+- **Fil Pilote CH1** — sélecteur de mode avec 4 options : Confort, Éco, Hors-gel, Arrêt
 
-Pour simplifier l'utilisation, créez une automatisation ou un script qui combine les deux interrupteurs :
-
-| Mode souhaité | SSR 1 | SSR 2 |
-|---|:---:|:---:|
-| Confort | OFF | OFF |
-| Éco | ON | ON |
-| Hors-gel | ON | OFF |
-| Arrêt | OFF | ON |
+Les interrupteurs SSR sont cachés (marqués `internal`) — la logique fil pilote est gérée automatiquement par le sélecteur. Le mode choisi est sauvegardé en mémoire flash et restauré après un redémarrage.
 
 Exemple d'automatisation pour passer en mode Éco la nuit :
 
@@ -273,41 +283,33 @@ automation:
       - platform: time
         at: "22:00:00"
     action:
-      - service: switch.turn_on
+      - service: select.select_option
         target:
-          entity_id:
-            - switch.ssr_1_ch1
-            - switch.ssr_2_ch1
+          entity_id: select.fil_pilote_ch1
+        data:
+          option: "Éco"
 
   - alias: "Radiateur salon - Confort le matin"
     trigger:
       - platform: time
         at: "06:30:00"
     action:
-      - service: switch.turn_off
+      - service: select.select_option
         target:
-          entity_id:
-            - switch.ssr_1_ch1
-            - switch.ssr_2_ch1
+          entity_id: select.fil_pilote_ch1
+        data:
+          option: "Confort"
 ```
 
 ---
 
 **EN**
 
-Once the firmware is flashed and the board is powered, the MaxPilot device appears automatically in Home Assistant via ESPHome discovery. You will find two switches:
+Once the firmware is flashed and the board is powered, the MaxPilot device appears automatically in Home Assistant via ESPHome discovery. You will find a **select** entity:
 
-- **SSR 1 CH1** — controls the positive half-wave (frost protection)
-- **SSR 2 CH1** — controls the negative half-wave (off)
+- **Fil Pilote CH1** — mode selector with 4 options: Confort, Éco, Hors-gel, Arrêt
 
-To simplify usage, create an automation or script that combines both switches:
-
-| Desired mode | SSR 1 | SSR 2 |
-|---|:---:|:---:|
-| Comfort | OFF | OFF |
-| Eco | ON | ON |
-| Frost protection | ON | OFF |
-| Off | OFF | ON |
+The SSR switches are hidden (marked `internal`) — the fil pilote logic is handled automatically by the selector. The chosen mode is saved to flash memory and restored after a reboot.
 
 Example automation to switch to Eco mode at night:
 
@@ -318,22 +320,22 @@ automation:
       - platform: time
         at: "22:00:00"
     action:
-      - service: switch.turn_on
+      - service: select.select_option
         target:
-          entity_id:
-            - switch.ssr_1_ch1
-            - switch.ssr_2_ch1
+          entity_id: select.fil_pilote_ch1
+        data:
+          option: "Éco"
 
   - alias: "Living room radiator - Comfort in the morning"
     trigger:
       - platform: time
         at: "06:30:00"
     action:
-      - service: switch.turn_off
+      - service: select.select_option
         target:
-          entity_id:
-            - switch.ssr_1_ch1
-            - switch.ssr_2_ch1
+          entity_id: select.fil_pilote_ch1
+        data:
+          option: "Confort"
 ```
 
 ---

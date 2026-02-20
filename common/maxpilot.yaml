@@ -2,18 +2,68 @@ esp8266:
   board: d1_mini
   restore_from_flash: true
 
+# Raw SSR switches (hidden from Home Assistant)
 switch:
   - platform: gpio
     pin:
       number: ${ssr1_pin}
       inverted: true
-    name: "SSR 1 ${ch_name}"
     id: ssr1
+    internal: true
     restore_mode: RESTORE_DEFAULT_OFF
   - platform: gpio
     pin:
       number: ${ssr2_pin}
       inverted: true
-    name: "SSR 2 ${ch_name}"
     id: ssr2
+    internal: true
     restore_mode: RESTORE_DEFAULT_OFF
+
+# Fil pilote mode selector (visible in Home Assistant)
+# Confort  = full heat (thermostat setpoint)
+# Éco      = reduced (~3-4°C below setpoint)
+# Hors-gel = frost protection (~7°C)
+# Arrêt    = radiator off
+select:
+  - platform: template
+    name: "Fil Pilote ${ch_name}"
+    id: fil_pilote_select
+    icon: "mdi:radiator"
+    optimistic: true
+    restore_value: true
+    options:
+      - "Confort"
+      - "Éco"
+      - "Hors-gel"
+      - "Arrêt"
+    initial_option: "Confort"
+    on_value:
+      then:
+        - lambda: |-
+            if (x == "Confort") {
+              id(ssr1).turn_off();
+              id(ssr2).turn_off();
+            } else if (x == "Éco") {
+              id(ssr1).turn_on();
+              id(ssr2).turn_on();
+            } else if (x == "Hors-gel") {
+              id(ssr1).turn_on();
+              id(ssr2).turn_off();
+            } else if (x == "Arrêt") {
+              id(ssr1).turn_off();
+              id(ssr2).turn_on();
+            }
+
+# Optional: room temperature sensor imported from Home Assistant.
+# Set 'temp_sensor_entity' in your device YAML to enable (e.g. "sensor.temperature_salon").
+# Leave it as "none" to disable.
+sensor:
+  - platform: homeassistant
+    name: "Température ${ch_name}"
+    id: room_temp
+    entity_id: ${temp_sensor_entity}
+    internal: ${temp_sensor_internal}
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    filters:
+      - filter_out: nan
