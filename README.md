@@ -1,77 +1,88 @@
 # MaxPilot
 
-**FR** | Carte de contrôle "fil pilote" pour radiateurs, basée sur un ESP D1 Mini et ESPHome.
-**EN** | "Fil pilote" radiator controller board, based on an ESP D1 Mini and ESPHome.
+![MaxPilot - Photo de la carte assemblée / Assembled board photo](images/photo.jpg)
+
+**FR** | MaxPilot est une carte open-source qui permet de **contrôler vos radiateurs électriques depuis votre téléphone ou votre ordinateur**, via Home Assistant. Elle se branche sur le fil pilote de vos radiateurs et commande le mode de chauffage (Confort, Éco, Hors-gel, Arrêt) en WiFi. Plus besoin de programmateur mural : vous gérez tout depuis votre domotique.
+
+**EN** | MaxPilot is an open-source board that lets you **control your electric radiators from your phone or computer**, via Home Assistant. It connects to your radiators' "fil pilote" (pilot wire) and sets the heating mode (Comfort, Eco, Frost protection, Off) over WiFi. No more wall-mounted programmer: manage everything from your smart home.
 
 ---
 
 ## Sommaire / Table of Contents
 
-- [Principe du fil pilote / How "Fil Pilote" Works](#principe-du-fil-pilote--how-fil-pilote-works)
+- [C'est quoi le fil pilote ? / What is "Fil Pilote"?](#cest-quoi-le-fil-pilote---what-is-fil-pilote)
 - [Fonctionnalités / Features](#fonctionnalités--features)
+- [Démarrage rapide / Quick Start](#démarrage-rapide--quick-start)
+- [Câblage / Wiring](#câblage--wiring)
 - [Schéma / Schematic](#schéma--schematic)
 - [Nomenclature / Bill of Materials](#nomenclature--bill-of-materials)
 - [Configuration ESPHome](#configuration-esphome)
+- [Intégration Home Assistant](#intégration-home-assistant--home-assistant-integration)
 - [Fabrication du PCB / PCB Manufacturing](#fabrication-du-pcb--pcb-manufacturing)
 - [Sécurité / Safety](#sécurité--safety)
 - [Licence / License](#licence--license)
 
 ---
 
-## Principe du fil pilote / How "Fil Pilote" Works
+## C'est quoi le fil pilote ? / What is "Fil Pilote"?
 
 **FR**
 
-Le **fil pilote** est un protocole de commande utilisé en France pour contrôler les radiateurs électriques. Un signal 230V AC est envoyé sur un fil dédié (le fil pilote) pour indiquer au radiateur le mode de fonctionnement souhaité. Le principe repose sur la forme du signal AC envoyé :
+Le **fil pilote** est un système utilisé en France pour piloter les radiateurs électriques. En plus des fils d'alimentation (phase + neutre), un fil supplémentaire — le fil pilote — transporte un signal de commande 230V AC. Le radiateur adapte son fonctionnement selon la **forme du signal** qu'il reçoit :
 
-| Ordre / Mode | Signal sur le fil pilote | SSR1 | SSR2 |
-|---|---|:---:|:---:|
-| **Confort** (pleine chauffe) | Pas de signal (fil ouvert) | OFF | OFF |
-| **Éco** (réduit) | Sinusoïde complète 230V | ON | ON |
-| **Hors-gel** | Alternance positive uniquement (+) | ON | OFF |
-| **Arrêt** | Alternance négative uniquement (−) | OFF | ON |
+| Mode | Ce que fait le radiateur | Signal sur le fil pilote | SSR1 | SSR2 |
+|---|---|---|:---:|:---:|
+| **Confort** | Chauffe à la température du thermostat | Pas de signal (fil ouvert) | OFF | OFF |
+| **Éco** | Réduit la température de ~3-4°C | Sinusoïde complète 230V | ON | ON |
+| **Hors-gel** | Maintient ~7°C minimum | Alternance positive uniquement | ON | OFF |
+| **Arrêt** | Radiateur éteint | Alternance négative uniquement | OFF | ON |
 
 ```
-Confort (pas de signal)         Éco (sinusoïde complète)
-          ╭─╮                         ╭─╮
-         │   │                       │   │
- ────────│───│────────       ────────│───│────────
-         │   │                       │   │
-          ╰─╯                         ╰─╯
-   SSR1: OFF  SSR2: OFF        SSR1: ON  SSR2: ON
+Confort (pas de signal)            Éco (sinusoïde complète)
 
-Hors-gel (alternance +)         Arrêt (alternance −)
-          ╭─╮
-         │   │
- ────────│───│────────       ────────────────────
-                                     │   │
-                                      ╰─╯
-   SSR1: ON  SSR2: OFF        SSR1: OFF  SSR2: ON
+                                        ╭──╮      ╭──╮
+                                       ╱    ╲    ╱    ╲
+ ──────────────────────        ───────╱──────╲──╱──────╲───
+                                    ╲    ╱    ╲    ╱
+                                     ╰──╯      ╰──╯
+
+   SSR1: OFF  SSR2: OFF           SSR1: ON   SSR2: ON
+
+
+Hors-gel (alternance +)            Arrêt (alternance −)
+
+      ╭──╮      ╭──╮
+     ╱    ╲    ╱    ╲
+ ───╱──────╲──╱──────╲───     ─────────────────────────────
+                                    ╲    ╱    ╲    ╱
+                                     ╰──╯      ╰──╯
+
+   SSR1: ON   SSR2: OFF           SSR1: OFF  SSR2: ON
 ```
 
-Chaque canal de MaxPilot utilise **deux optocoupleurs MOC3041M** avec des **diodes 1N4007** pour laisser passer sélectivement l'alternance positive, l'alternance négative, les deux, ou aucune. Les MOC3041M intègrent un détecteur de passage par zéro pour commuter proprement sans générer de parasites.
+MaxPilot utilise **deux optocoupleurs MOC3041M** par canal, avec des **diodes 1N4007**, pour laisser passer sélectivement l'alternance positive, négative, les deux, ou aucune. Les MOC3041M intègrent un détecteur de passage par zéro pour commuter proprement sans parasites.
 
 ---
 
 **EN**
 
-**Fil pilote** ("pilot wire") is a control protocol used in France to manage electric radiators. A 230V AC signal is sent on a dedicated wire to tell the radiator which operating mode to use. The principle relies on the shape of the AC waveform sent:
+**Fil pilote** ("pilot wire") is a system used in France to control electric radiators. In addition to power wires (live + neutral), an extra wire — the pilot wire — carries a 230V AC control signal. The radiator adjusts its operation based on the **shape of the signal** it receives:
 
-| Mode | Signal on pilot wire | SSR1 | SSR2 |
-|---|---|:---:|:---:|
-| **Comfort** (full heat) | No signal (open wire) | OFF | OFF |
-| **Eco** (reduced) | Full 230V sine wave | ON | ON |
-| **Frost protection** | Positive half-wave only (+) | ON | OFF |
-| **Off** | Negative half-wave only (−) | OFF | ON |
+| Mode | What the radiator does | Signal on pilot wire | SSR1 | SSR2 |
+|---|---|---|:---:|:---:|
+| **Comfort** | Heats to thermostat setpoint | No signal (open wire) | OFF | OFF |
+| **Eco** | Reduces temperature by ~3-4°C | Full 230V sine wave | ON | ON |
+| **Frost protection** | Maintains ~7°C minimum | Positive half-wave only | ON | OFF |
+| **Off** | Radiator off | Negative half-wave only | OFF | ON |
 
-Each MaxPilot channel uses **two MOC3041M optocouplers** with **1N4007 diodes** to selectively pass the positive half-wave, the negative half-wave, both, or neither. The MOC3041M includes built-in zero-cross detection to switch cleanly without generating electrical noise.
+MaxPilot uses **two MOC3041M optocouplers** per channel, with **1N4007 diodes**, to selectively pass the positive half-wave, the negative half-wave, both, or neither. The MOC3041M includes built-in zero-cross detection to switch cleanly without electrical noise.
 
 ---
 
 ## Fonctionnalités / Features
 
 **FR**
-- 2 canaux indépendants de contrôle fil pilote
+- 2 canaux indépendants de contrôle fil pilote (= 2 radiateurs ou zones)
 - Microcontrôleur ESP8266 (WeMos D1 Mini) avec WiFi intégré
 - Compatible ESPHome et Home Assistant
 - Alimentation AC/DC isolée (HLK-PM01, 5V)
@@ -80,13 +91,61 @@ Each MaxPilot channel uses **two MOC3041M optocouplers** with **1N4007 diodes** 
 - Fusible de protection 1A
 
 **EN**
-- 2 independent fil pilote control channels
+- 2 independent fil pilote control channels (= 2 radiators or zones)
 - ESP8266 microcontroller (WeMos D1 Mini) with built-in WiFi
 - Compatible with ESPHome and Home Assistant
 - Isolated AC/DC power supply (HLK-PM01, 5V)
 - Surge protection (varistor)
 - Zero-cross optocouplers (MOC3041M) for clean switching
 - 1A fuse protection
+
+---
+
+## Démarrage rapide / Quick Start
+
+**FR**
+
+1. **Fabriquer ou commander le PCB** — envoyez les fichiers Gerber à un fabricant (JLCPCB, PCBWay...)
+2. **Souder les composants** — voir la [nomenclature](#nomenclature--bill-of-materials) ci-dessous
+3. **Flasher le firmware** — branchez le D1 Mini en USB et lancez `esphome run maxpilot_ch1.yaml`
+4. **Câbler la carte** — branchez phase, neutre et fil pilote sur le bornier (voir [câblage](#câblage--wiring))
+5. **Ajouter à Home Assistant** — le périphérique apparaît automatiquement dans Home Assistant via l'intégration ESPHome
+6. **Piloter vos radiateurs** — commandez les modes depuis le tableau de bord ou via des automatisations
+
+**EN**
+
+1. **Manufacture or order the PCB** — send Gerber files to a manufacturer (JLCPCB, PCBWay...)
+2. **Solder the components** — see the [bill of materials](#nomenclature--bill-of-materials) below
+3. **Flash the firmware** — plug the D1 Mini via USB and run `esphome run maxpilot_ch1.yaml`
+4. **Wire the board** — connect live, neutral and pilot wire to the terminal block (see [wiring](#câblage--wiring))
+5. **Add to Home Assistant** — the device appears automatically in Home Assistant via ESPHome integration
+6. **Control your radiators** — set modes from the dashboard or through automations
+
+---
+
+## Câblage / Wiring
+
+> **ATTENTION / WARNING** : Coupez le courant au disjoncteur avant tout câblage ! / Switch off the circuit breaker before any wiring!
+
+**FR** | La carte se branche sur le bornier 3 points (J1). Le fil pilote de votre radiateur est le fil noir (ou parfois gris) présent dans la gaine électrique de votre radiateur.
+
+**EN** | The board connects via the 3-pin terminal block (J1). The pilot wire on your radiator is the black (or sometimes grey) wire in your radiator's electrical conduit.
+
+```
+                    Bornier J1 / Terminal block J1
+                   ┌─────┬─────┬─────┐
+                   │  L  │  N  │  P  │
+                   └──┬──┴──┬──┴──┬──┘
+                      │     │     │
+                      │     │     └──── Fil pilote vers radiateur
+                      │     │           Pilot wire to radiator
+                      │     │
+                      │     └────────── Neutre / Neutral (bleu/blue)
+                      │
+                      └──────────────── Phase / Live (marron ou rouge / brown or red)
+
+          Depuis le tableau électrique / From the electrical panel
+```
 
 ---
 
@@ -122,7 +181,7 @@ Secteur AC ──► Fusible (F1) ──► Varistance (RV1) ──► HLK-PM01 
 | GPIO | Fonction / Function |
 |------|---------------------|
 | D3   | SSR1 — Optocoupleur U2 (alternance + / positive half-wave) |
-| D7   | SSR2 — Optocoupleur U3 (alternance − / negative half-wave) |
+| D7   | SSR2 — Optocoupleur U3 (alternance - / negative half-wave) |
 
 ---
 
@@ -176,8 +235,107 @@ esphome:
 
 ### 3. Flasher / Flash
 
+**FR** | Branchez le D1 Mini en USB sur votre ordinateur, puis :
+**EN** | Plug the D1 Mini via USB to your computer, then:
+
 ```bash
+# Premier flash (USB obligatoire) / First flash (USB required)
 esphome run maxpilot_ch1.yaml
+
+# Mises à jour suivantes (via WiFi OTA) / Subsequent updates (via WiFi OTA)
+esphome run maxpilot_ch1.yaml --device maxpilot_ch1.local
+```
+
+---
+
+## Intégration Home Assistant / Home Assistant Integration
+
+**FR**
+
+Une fois le firmware flashé et la carte alimentée, le périphérique MaxPilot apparaît automatiquement dans Home Assistant via la découverte ESPHome. Vous trouverez deux interrupteurs :
+
+- **SSR 1 CH1** — contrôle l'alternance positive (hors-gel)
+- **SSR 2 CH1** — contrôle l'alternance négative (arrêt)
+
+Pour simplifier l'utilisation, créez une automatisation ou un script qui combine les deux interrupteurs :
+
+| Mode souhaité | SSR 1 | SSR 2 |
+|---|:---:|:---:|
+| Confort | OFF | OFF |
+| Éco | ON | ON |
+| Hors-gel | ON | OFF |
+| Arrêt | OFF | ON |
+
+Exemple d'automatisation pour passer en mode Éco la nuit :
+
+```yaml
+automation:
+  - alias: "Radiateur salon - Éco la nuit"
+    trigger:
+      - platform: time
+        at: "22:00:00"
+    action:
+      - service: switch.turn_on
+        target:
+          entity_id:
+            - switch.ssr_1_ch1
+            - switch.ssr_2_ch1
+
+  - alias: "Radiateur salon - Confort le matin"
+    trigger:
+      - platform: time
+        at: "06:30:00"
+    action:
+      - service: switch.turn_off
+        target:
+          entity_id:
+            - switch.ssr_1_ch1
+            - switch.ssr_2_ch1
+```
+
+---
+
+**EN**
+
+Once the firmware is flashed and the board is powered, the MaxPilot device appears automatically in Home Assistant via ESPHome discovery. You will find two switches:
+
+- **SSR 1 CH1** — controls the positive half-wave (frost protection)
+- **SSR 2 CH1** — controls the negative half-wave (off)
+
+To simplify usage, create an automation or script that combines both switches:
+
+| Desired mode | SSR 1 | SSR 2 |
+|---|:---:|:---:|
+| Comfort | OFF | OFF |
+| Eco | ON | ON |
+| Frost protection | ON | OFF |
+| Off | OFF | ON |
+
+Example automation to switch to Eco mode at night:
+
+```yaml
+automation:
+  - alias: "Living room radiator - Eco at night"
+    trigger:
+      - platform: time
+        at: "22:00:00"
+    action:
+      - service: switch.turn_on
+        target:
+          entity_id:
+            - switch.ssr_1_ch1
+            - switch.ssr_2_ch1
+
+  - alias: "Living room radiator - Comfort in the morning"
+    trigger:
+      - platform: time
+        at: "06:30:00"
+    action:
+      - service: switch.turn_off
+        target:
+          entity_id:
+            - switch.ssr_1_ch1
+            - switch.ssr_2_ch1
 ```
 
 ---
@@ -203,9 +361,9 @@ Fichiers inclus / Included files:
 
 ## Sécurité / Safety
 
-> **FR** | **ATTENTION : Ce projet implique des tensions secteur (230V AC). L'installation et la manipulation doivent être effectuées par une personne qualifiée. Risque d'électrocution mortelle. Coupez toujours le courant avant toute intervention.**
+> **FR** | **ATTENTION : Ce projet implique des tensions secteur (230V AC). L'installation et la manipulation doivent être effectuées par une personne qualifiée. Risque d'électrocution mortelle. Coupez toujours le courant avant toute intervention. La carte doit être installée dans un boîtier fermé et isolé.**
 
-> **EN** | **WARNING: This project involves mains voltage (230V AC). Installation and handling must be performed by a qualified person. Risk of fatal electric shock. Always disconnect power before any work.**
+> **EN** | **WARNING: This project involves mains voltage (230V AC). Installation and handling must be performed by a qualified person. Risk of fatal electric shock. Always disconnect power before any work. The board must be installed in a closed, insulated enclosure.**
 
 ---
 
