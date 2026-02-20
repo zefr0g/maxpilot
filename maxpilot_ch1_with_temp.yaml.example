@@ -1,0 +1,26 @@
+# Example: MaxPilot with room temperature sensor from Home Assistant.
+# The temperature is imported from an existing HA sensor entity
+# (Zigbee, BLE, WiFi, etc.) and displayed alongside the fil pilote control.
+#
+# Exemple : MaxPilot avec capteur de température depuis Home Assistant.
+# La température est importée depuis une entité HA existante
+# (Zigbee, BLE, WiFi, etc.) et affichée à côté du contrôle fil pilote.
+
+substitutions:
+  name: maxpilot_ch1
+  ch_name: "Salon"
+  ssr1_pin: D3
+  ssr2_pin: D7
+  uptime_name: "Uptime Sensor"
+  # Replace with your actual HA temperature sensor entity ID
+  # Remplacez par l'entity ID de votre capteur de température HA
+  temp_sensor_entity: "sensor.temperature_salon"
+  temp_sensor_internal: "false"
+
+packages:
+  core: !include common/core.yaml
+  wifi: !include common/wifi.yaml
+  maxpilot: !include common/maxpilot.yaml
+
+esphome:
+  name: ${name}
