@@ -1,0 +1,9 @@
+"Id";"Référence";"Boîtier";"Quantité";"Désignation";"Fournisseur et réf";
+1;"F1";"Fuseholder_Blade_Mini_Keystone_3568";1;"1A";;;
+2;"C1";"C_Disc_D8.0mm_W2.5mm_P5.00mm";1;"22µF";;;
+3;"U2,U3";"DIP-6_W7.62mm";2;"MOC3041M";;;
+4;"R2,R1";"R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal";2;"570";;;
+5;"J1";"TerminalBlock_bornier-3_P5.08mm";1;"Conn_01x03";;;
+6;"PS1";"Converter_ACDC_HiLink_HLK-PMxx";1;"HLK-PM01";;;
+7;"U1";"WEMOS_D1_mini_light";1;"WeMos_D1_mini";;;
+8;"D1,D2";"D_DO-41_SOD81_P10.16mm_Horizontal";2;"1N4007";;;

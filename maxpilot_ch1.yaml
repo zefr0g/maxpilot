@@ -1,0 +1,14 @@
+substitutions:
+  name: maxpilot_ch1
+  ch_name: "CH1"
+  ssr1_pin: D3
+  ssr2_pin: D7
+  uptime_name: "Uptime Sensor"
+
+packages:
+  core: !include common/core.yaml
+  wifi: !include common/wifi.yaml
+  maxpilot: !include common/maxpilot.yaml
+
+esphome:
+  name: ${name}

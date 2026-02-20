@@ -1,0 +1,17 @@
+### Module positions - created on mar. 22 août 2023 19:08:08 ###
+### Printed by Pcbnew version 6.0.2+dfsg-1
+## Unit = mm, Angle = deg.
+## Side : top
+# Ref     Val            Package                                                 PosX       PosY       Rot  Side
+C1        22µF          C_Disc_D8.0mm_W2.5mm_P5.00mm                         73.6600   -20.3200    0.0000  top
+D1        1N4007         D_DO-41_SOD81_P10.16mm_Horizontal                    35.5600   -38.1000  180.0000  top
+D2        1N4007         D_DO-41_SOD81_P10.16mm_Horizontal                    25.4000   -48.2600    0.0000  top
+F1        1A             Fuseholder_Blade_Mini_Keystone_3568                  17.7800   -15.2400    0.0000  top
+J1        Conn_01x03     TerminalBlock_bornier-3_P5.08mm                      17.7800   -38.1000  -90.0000  top
+PS1       HLK-PM01       Converter_ACDC_HiLink_HLK-PMxx                       36.2375   -20.3600    0.0000  top
+R1        570            R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal    71.1200   -27.9400  -90.0000  top
+R2        570            R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal    78.7400   -27.9400  -90.0000  top
+U1        WeMos_D1_mini  WEMOS_D1_mini_light                                  85.5750   -21.5900    0.0000  top
+U2        MOC3041M       DIP-6_W7.62mm                                        60.9450   -39.3800  -90.0000  top
+U3        MOC3041M       DIP-6_W7.62mm                                        48.2450   -39.3800  -90.0000  top
+## End

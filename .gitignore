@@ -1,0 +1,24 @@
+# KiCad local/backup files
+*.kicad_prl
+*-backups/
+fp-info-cache
+
+# Archives
+*.zip
+
+# Reports
+report.txt
+
+# Secrets
+secrets.yaml
+!secrets.yaml.example
+
+# CNC/Gcode files
+box/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Claude Code
+.claude/
