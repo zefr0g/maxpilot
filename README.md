@@ -7,6 +7,7 @@
 
 ## Sommaire / Table of Contents
 
+- [Principe du fil pilote / How "Fil Pilote" Works](#principe-du-fil-pilote--how-fil-pilote-works)
 - [Fonctionnalités / Features](#fonctionnalités--features)
 - [Schéma / Schematic](#schéma--schematic)
 - [Nomenclature / Bill of Materials](#nomenclature--bill-of-materials)
@@ -14,6 +15,56 @@
 - [Fabrication du PCB / PCB Manufacturing](#fabrication-du-pcb--pcb-manufacturing)
 - [Sécurité / Safety](#sécurité--safety)
 - [Licence / License](#licence--license)
+
+---
+
+## Principe du fil pilote / How "Fil Pilote" Works
+
+**FR**
+
+Le **fil pilote** est un protocole de commande utilisé en France pour contrôler les radiateurs électriques. Un signal 230V AC est envoyé sur un fil dédié (le fil pilote) pour indiquer au radiateur le mode de fonctionnement souhaité. Le principe repose sur la forme du signal AC envoyé :
+
+| Ordre / Mode | Signal sur le fil pilote | SSR1 | SSR2 |
+|---|---|:---:|:---:|
+| **Confort** (pleine chauffe) | Pas de signal (fil ouvert) | OFF | OFF |
+| **Éco** (réduit) | Sinusoïde complète 230V | ON | ON |
+| **Hors-gel** | Alternance positive uniquement (+) | ON | OFF |
+| **Arrêt** | Alternance négative uniquement (−) | OFF | ON |
+
+```
+Confort (pas de signal)         Éco (sinusoïde complète)
+          ╭─╮                         ╭─╮
+         │   │                       │   │
+ ────────│───│────────       ────────│───│────────
+         │   │                       │   │
+          ╰─╯                         ╰─╯
+   SSR1: OFF  SSR2: OFF        SSR1: ON  SSR2: ON
+
+Hors-gel (alternance +)         Arrêt (alternance −)
+          ╭─╮
+         │   │
+ ────────│───│────────       ────────────────────
+                                     │   │
+                                      ╰─╯
+   SSR1: ON  SSR2: OFF        SSR1: OFF  SSR2: ON
+```
+
+Chaque canal de MaxPilot utilise **deux optocoupleurs MOC3041M** avec des **diodes 1N4007** pour laisser passer sélectivement l'alternance positive, l'alternance négative, les deux, ou aucune. Les MOC3041M intègrent un détecteur de passage par zéro pour commuter proprement sans générer de parasites.
+
+---
+
+**EN**
+
+**Fil pilote** ("pilot wire") is a control protocol used in France to manage electric radiators. A 230V AC signal is sent on a dedicated wire to tell the radiator which operating mode to use. The principle relies on the shape of the AC waveform sent:
+
+| Mode | Signal on pilot wire | SSR1 | SSR2 |
+|---|---|:---:|:---:|
+| **Comfort** (full heat) | No signal (open wire) | OFF | OFF |
+| **Eco** (reduced) | Full 230V sine wave | ON | ON |
+| **Frost protection** | Positive half-wave only (+) | ON | OFF |
+| **Off** | Negative half-wave only (−) | OFF | ON |
+
+Each MaxPilot channel uses **two MOC3041M optocouplers** with **1N4007 diodes** to selectively pass the positive half-wave, the negative half-wave, both, or neither. The MOC3041M includes built-in zero-cross detection to switch cleanly without generating electrical noise.
 
 ---
 
@@ -70,8 +121,8 @@ Secteur AC ──► Fusible (F1) ──► Varistance (RV1) ──► HLK-PM01 
 
 | GPIO | Fonction / Function |
 |------|---------------------|
-| D3   | Canal 1 — SSR/Optocoupleur U2 |
-| D7   | Canal 2 — SSR/Optocoupleur U3 |
+| D3   | SSR1 — Optocoupleur U2 (alternance + / positive half-wave) |
+| D7   | SSR2 — Optocoupleur U3 (alternance − / negative half-wave) |
 
 ---
 

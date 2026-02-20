@@ -1,0 +1,19 @@
+esp8266:
+  board: d1_mini
+  restore_from_flash: true
+
+switch:
+  - platform: gpio
+    pin:
+      number: ${ssr1_pin}
+      inverted: true
+    name: "SSR 1 ${ch_name}"
+    id: ssr1
+    restore_mode: RESTORE_DEFAULT_OFF
+  - platform: gpio
+    pin:
+      number: ${ssr2_pin}
+      inverted: true
+    name: "SSR 2 ${ch_name}"
+    id: ssr2
+    restore_mode: RESTORE_DEFAULT_OFF

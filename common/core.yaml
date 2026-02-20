@@ -1,0 +1,28 @@
+api:
+  encryption:
+    key: !secret api_encryption_key
+  custom_services: true
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+logger:
+
+captive_portal:
+
+substitutions:
+  uptime_name: "Uptime"
+  wifi_signal_name: "WiFi Signal"
+  version_name: "ESPHome Version"
+
+sensor:
+  - platform: uptime
+    name: ${uptime_name}
+  - platform: wifi_signal
+    name: ${wifi_signal_name}
+    update_interval: 60s
+
+text_sensor:
+  - platform: version
+    name: ${version_name}
