@@ -108,7 +108,7 @@ MaxPilot uses **two MOC3041M optocouplers** per channel, with **1N4007 diodes**,
 
 1. **Fabriquer ou commander le PCB** — envoyez les fichiers Gerber à un fabricant (JLCPCB, PCBWay...)
 2. **Souder les composants** — voir la [nomenclature](#nomenclature--bill-of-materials) ci-dessous
-3. **Flasher le firmware** — branchez le D1 Mini en USB et lancez `esphome run maxpilot_ch1.yaml`
+3. **Flasher le firmware** — branchez le D1 Mini en USB et lancez `esphome run esphome/maxpilot_ch1.yaml`
 4. **Câbler la carte** — branchez phase, neutre et fil pilote sur le bornier (voir [câblage](#câblage--wiring))
 5. **Ajouter à Home Assistant** — le périphérique apparaît automatiquement dans Home Assistant via l'intégration ESPHome
 6. **Piloter vos radiateurs** — commandez les modes depuis le tableau de bord ou via des automatisations
@@ -117,7 +117,7 @@ MaxPilot uses **two MOC3041M optocouplers** per channel, with **1N4007 diodes**,
 
 1. **Manufacture or order the PCB** — send Gerber files to a manufacturer (JLCPCB, PCBWay...)
 2. **Solder the components** — see the [bill of materials](#nomenclature--bill-of-materials) below
-3. **Flash the firmware** — plug the D1 Mini via USB and run `esphome run maxpilot_ch1.yaml`
+3. **Flash the firmware** — plug the D1 Mini via USB and run `esphome run esphome/maxpilot_ch1.yaml`
 4. **Wire the board** — connect live, neutral and pilot wire to the terminal block (see [wiring](#câblage--wiring))
 5. **Add to Home Assistant** — the device appears automatically in Home Assistant via ESPHome integration
 6. **Control your radiators** — set modes from the dashboard or through automations
@@ -207,13 +207,13 @@ Secteur AC ──► Fusible (F1) ──► Varistance (RV1) ──► HLK-PM01 
 ### 1. Préparer les secrets / Prepare secrets
 
 ```bash
-cp secrets.yaml.example secrets.yaml
-# Éditez secrets.yaml avec vos identifiants / Edit secrets.yaml with your credentials
+cp esphome/secrets.yaml.example esphome/secrets.yaml
+# Éditez esphome/secrets.yaml avec vos identifiants / Edit esphome/secrets.yaml with your credentials
 ```
 
 ### 2. Configuration par canal / Per-channel configuration
 
-Voir `maxpilot_ch1.yaml` pour un exemple de configuration :
+Voir `esphome/maxpilot_ch1.yaml` pour un exemple de configuration :
 
 ```yaml
 substitutions:
@@ -234,8 +234,8 @@ esphome:
   name: ${name}
 ```
 
-**FR** | Les fichiers `common/` contiennent la configuration partagée (WiFi, capteurs, logique fil pilote). Adaptez-les à votre installation.
-**EN** | The `common/` files contain shared configuration (WiFi, sensors, fil pilote logic). Adapt them to your setup.
+**FR** | Les fichiers `esphome/common/` contiennent la configuration partagée (WiFi, capteurs, logique fil pilote). Adaptez-les à votre installation.
+**EN** | The `esphome/common/` files contain shared configuration (WiFi, sensors, fil pilote logic). Adapt them to your setup.
 
 ### 3. Capteur de température (optionnel) / Temperature sensor (optional)
 
@@ -249,8 +249,8 @@ substitutions:
   temp_sensor_internal: "false"
 ```
 
-**FR** | Voir `maxpilot_ch1_with_temp.yaml.example` pour un exemple complet.
-**EN** | See `maxpilot_ch1_with_temp.yaml.example` for a complete example.
+**FR** | Voir `esphome/maxpilot_ch1_with_temp.yaml.example` pour un exemple complet.
+**EN** | See `esphome/maxpilot_ch1_with_temp.yaml.example` for a complete example.
 
 ### 4. Contrôle climatique (optionnel) / Climate control (optional)
 
@@ -288,10 +288,10 @@ packages:
 
 ```bash
 # Premier flash (USB obligatoire) / First flash (USB required)
-esphome run maxpilot_ch1.yaml
+esphome run esphome/maxpilot_ch1.yaml
 
 # Mises à jour suivantes (via WiFi OTA) / Subsequent updates (via WiFi OTA)
-esphome run maxpilot_ch1.yaml --device maxpilot_ch1.local
+esphome run esphome/maxpilot_ch1.yaml --device maxpilot_ch1.local
 ```
 
 ---
