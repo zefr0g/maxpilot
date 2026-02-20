@@ -152,8 +152,8 @@ MaxPilot uses **two MOC3041M optocouplers** per channel, with **1N4007 diodes**,
 
 ## Schéma / Schematic
 
-**FR** | Le schéma complet se trouve dans `MaxPilot.kicad_sch` (KiCad 9).
-**EN** | The full schematic is in `MaxPilot.kicad_sch` (KiCad 9).
+**FR** | Le schéma complet se trouve dans `hardware/kicad/MaxPilot.kicad_sch` (KiCad 9).
+**EN** | The full schematic is in `hardware/kicad/MaxPilot.kicad_sch` (KiCad 9).
 
 ![Schéma / Schematic](images/MaxPilot.svg)
 
@@ -383,13 +383,16 @@ automation:
 |:--:|:--:|
 | ![PCB Front](images/MaxPilot-pcb-front.svg) | ![PCB Back](images/MaxPilot-pcb-back.svg) |
 
-Fichiers inclus / Included files:
+Fichiers inclus dans `hardware/gerber/` / Included files in `hardware/gerber/`:
 - `MaxPilot-F_Cu.gbr` / `MaxPilot-B_Cu.gbr` — Cuivre / Copper layers
 - `MaxPilot-F_Mask.gbr` / `MaxPilot-B_Mask.gbr` — Masque de soudure / Solder mask
 - `MaxPilot-F_Silkscreen.gbr` / `MaxPilot-B_Silkscreen.gbr` — Sérigraphie / Silkscreen
 - `MaxPilot-Edge_Cuts.gbr` — Contour de la carte / Board outline
 - `MaxPilot-PTH.drl` / `MaxPilot-NPTH.drl` — Perçages / Drill files
+
+Fichiers d'assemblage dans `hardware/` / Assembly files in `hardware/`:
 - `MaxPilot-top.pos` / `MaxPilot-bottom.pos` — Positions des composants / Component placement
+- `MaxPilot.csv` — Nomenclature / Bill of materials
 
 ---
 
