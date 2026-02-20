@@ -377,7 +377,9 @@ Le design actuel fonctionne correctement pour l'usage prévu. Voici des amélior
 
 3. **Pas de protection sur la sortie fil pilote** — Une **diode TVS** ou une petite varistance sur le fil pilote protégerait contre les surtensions venant du côté radiateur.
 
-4. **Distances d'isolement sur le PCB** — Pour un circuit secteur, les normes IPC/IEC recommandent **>2,5mm de clearance** entre les pistes secteur et basse tension. À vérifier sur le layout actuel.
+4. **Distances d'isolement insuffisantes sur le PCB** — Les normes IPC-2221B et IEC 62368-1 recommandent **>2,5mm de clearance** entre pistes secteur et basse tension pour du 230V AC. Le DRC révèle que la règle actuelle est de **0,5mm** et que plusieurs pistes sont trop proches, notamment la piste NEUT et les pads de D1/D2 (jusqu'à **0,44mm** de distance). Le bornier J1 (pas de 5,08mm) ne laisse que 2,08mm entre les pads LINE/NEUT/PILOT. Une v2 nécessiterait un re-routage du PCB et potentiellement un bornier au pas de 7,62mm.
+
+5. **Traces non connectées** — Le DRC signale 2 connexions manquantes sur U3 (pin 5, net D2-Pad2) et une piste flottante sur R2. À corriger dans KiCad.
 
 ---
 
@@ -391,7 +393,9 @@ The current design works correctly for its intended use. Here are possible impro
 
 3. **No protection on pilot wire output** — A **TVS diode** or small varistor on the pilot wire would protect against surges coming from the radiator side.
 
-4. **PCB creepage distances** — For mains voltage circuits, IPC/IEC standards recommend **>2.5mm clearance** between mains and low-voltage traces. Should be verified on the current layout.
+4. **Insufficient PCB creepage distances** — IPC-2221B and IEC 62368-1 standards recommend **>2.5mm clearance** between mains and low-voltage traces for 230V AC. DRC reveals the current rule is only **0.5mm** and several traces are too close, notably the NEUT trace and D1/D2 pads (as low as **0.44mm**). The J1 terminal block (5.08mm pitch) only allows 2.08mm between LINE/NEUT/PILOT pads. A v2 would require PCB re-routing and potentially a 7.62mm pitch terminal block.
+
+5. **Unconnected traces** — DRC reports 2 missing connections on U3 (pin 5, net D2-Pad2) and a dangling track on R2. To be fixed in KiCad.
 
 ---
 
