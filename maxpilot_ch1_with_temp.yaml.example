@@ -1,10 +1,12 @@
-# Example: MaxPilot with room temperature sensor from Home Assistant.
+# Example: MaxPilot with room temperature sensor and climate control.
 # The temperature is imported from an existing HA sensor entity
-# (Zigbee, BLE, WiFi, etc.) and displayed alongside the fil pilote control.
+# (Zigbee, BLE, WiFi, etc.) and a thermostat climate entity automatically
+# switches between Confort and Éco based on room temperature.
 #
-# Exemple : MaxPilot avec capteur de température depuis Home Assistant.
+# Exemple : MaxPilot avec capteur de température et contrôle climatique.
 # La température est importée depuis une entité HA existante
-# (Zigbee, BLE, WiFi, etc.) et affichée à côté du contrôle fil pilote.
+# (Zigbee, BLE, WiFi, etc.) et une entité thermostat bascule automatiquement
+# entre Confort et Éco selon la température de la pièce.
 
 substitutions:
   name: maxpilot_ch1
@@ -21,6 +23,7 @@ packages:
   core: !include common/core.yaml
   wifi: !include common/wifi.yaml
   maxpilot: !include common/maxpilot.yaml
+  climate: !include common/maxpilot_climate.yaml
 
 esphome:
   name: ${name}

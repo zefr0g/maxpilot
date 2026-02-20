@@ -1,0 +1,61 @@
+# Fil pilote climate controller.
+# Requires a temperature sensor to be configured (temp_sensor_entity).
+# Automatically switches between Confort and Éco based on room temperature.
+#
+# Contrôleur climatique fil pilote.
+# Nécessite un capteur de température configuré (temp_sensor_entity).
+# Bascule automatiquement entre Confort et Éco selon la température de la pièce.
+
+climate:
+  - platform: thermostat
+    name: "Radiateur ${ch_name}"
+    id: fil_pilote_climate
+    icon: "mdi:radiator"
+    sensor: room_temp
+    visual:
+      min_temperature: 7
+      max_temperature: 28
+      temperature_step: 0.5
+    min_idle_time: 5min
+    min_heating_off_time: 5min
+    min_heating_run_time: 5min
+    heat_deadband: 0.5
+    heat_overrun: 0.5
+    heat_action:
+      - lambda: |-
+          // Confort: SSR1 OFF, SSR2 OFF
+          id(ssr1).turn_off();
+          id(ssr2).turn_off();
+          auto call = id(fil_pilote_select).make_call();
+          call.set_option("Confort");
+          call.perform();
+    idle_action:
+      - lambda: |-
+          // Éco: SSR1 ON, SSR2 ON
+          id(ssr1).turn_on();
+          id(ssr2).turn_on();
+          auto call = id(fil_pilote_select).make_call();
+          call.set_option("Éco");
+          call.perform();
+    off_mode:
+      - lambda: |-
+          // Arrêt: SSR1 OFF, SSR2 ON
+          id(ssr1).turn_off();
+          id(ssr2).turn_on();
+          auto call = id(fil_pilote_select).make_call();
+          call.set_option("Arrêt");
+          call.perform();
+    default_preset: Confort
+    preset:
+      - name: Confort
+        default_target_temperature_low: 19
+        mode: heat
+      - name: Éco
+        default_target_temperature_low: 17
+        mode: heat
+      - name: Hors-gel
+        default_target_temperature_low: 7
+        mode: heat
+      - name: Absent
+        default_target_temperature_low: 7
+        mode: "off"

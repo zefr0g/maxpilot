@@ -12,6 +12,7 @@
 
 - [C'est quoi le fil pilote ? / What is "Fil Pilote"?](#cest-quoi-le-fil-pilote---what-is-fil-pilote)
 - [Fonctionnalités / Features](#fonctionnalités--features)
+- [Contrôle climatique / Climate Control](#4-contrôle-climatique-optionnel--climate-control-optional)
 - [Démarrage rapide / Quick Start](#démarrage-rapide--quick-start)
 - [Câblage / Wiring](#câblage--wiring)
 - [Schéma / Schematic](#schéma--schematic)
@@ -88,6 +89,7 @@ MaxPilot uses **two MOC3041M optocouplers** per channel, with **1N4007 diodes**,
 - Protection contre les surtensions (varistance)
 - Optocoupleurs à passage par zéro (MOC3041M) pour une commutation propre
 - Fusible de protection 1A
+- Thermostat intégré avec capteur de température externe (optionnel)
 
 **EN**
 - ESP8266 microcontroller (WeMos D1 Mini) with built-in WiFi
@@ -96,6 +98,7 @@ MaxPilot uses **two MOC3041M optocouplers** per channel, with **1N4007 diodes**,
 - Surge protection (varistor)
 - Zero-cross optocouplers (MOC3041M) for clean switching
 - 1A fuse protection
+- Built-in thermostat with external temperature sensor (optional)
 
 ---
 
@@ -249,7 +252,36 @@ substitutions:
 **FR** | Voir `maxpilot_ch1_with_temp.yaml.example` pour un exemple complet.
 **EN** | See `maxpilot_ch1_with_temp.yaml.example` for a complete example.
 
-### 4. Flasher / Flash
+### 4. Contrôle climatique (optionnel) / Climate control (optional)
+
+**FR** | Si un capteur de température est configuré, vous pouvez ajouter un **thermostat intégré** qui bascule automatiquement entre Confort et Éco selon la température de la pièce. Ajoutez le package `maxpilot_climate.yaml` :
+
+**EN** | If a temperature sensor is configured, you can add a **built-in thermostat** that automatically switches between Comfort and Eco based on room temperature. Add the `maxpilot_climate.yaml` package:
+
+```yaml
+packages:
+  core: !include common/core.yaml
+  wifi: !include common/wifi.yaml
+  maxpilot: !include common/maxpilot.yaml
+  climate: !include common/maxpilot_climate.yaml
+```
+
+**FR** | Le thermostat expose une entité **climate** dans Home Assistant avec 4 presets :
+
+**EN** | The thermostat exposes a **climate** entity in Home Assistant with 4 presets:
+
+| Preset | Consigne / Setpoint | Mode fil pilote |
+|--------|:-------------------:|-----------------|
+| **Confort** | 19°C | Confort (chauffe) |
+| **Éco** | 17°C | Éco (réduit) |
+| **Hors-gel** | 7°C | Hors-gel |
+| **Absent** | — | Arrêt |
+
+**FR** | Quand la température est inférieure à la consigne, le thermostat passe en Confort (chauffe). Quand la consigne est atteinte, il passe en Éco (réduit). Le sélecteur fil pilote reste synchronisé avec le thermostat.
+
+**EN** | When the temperature is below the setpoint, the thermostat switches to Comfort (heating). When the setpoint is reached, it switches to Eco (reduced). The fil pilote selector stays synchronized with the thermostat.
+
+### 5. Flasher / Flash
 
 **FR** | Branchez le D1 Mini en USB sur votre ordinateur, puis :
 **EN** | Plug the D1 Mini via USB to your computer, then:
@@ -268,11 +300,12 @@ esphome run maxpilot_ch1.yaml --device maxpilot_ch1.local
 
 **FR**
 
-Une fois le firmware flashé et la carte alimentée, le périphérique MaxPilot apparaît automatiquement dans Home Assistant via la découverte ESPHome. Vous trouverez une entité **select** :
+Une fois le firmware flashé et la carte alimentée, le périphérique MaxPilot apparaît automatiquement dans Home Assistant via la découverte ESPHome. Vous trouverez :
 
 - **Fil Pilote CH1** — sélecteur de mode avec 4 options : Confort, Éco, Hors-gel, Arrêt
+- **Radiateur CH1** *(si climate activé)* — thermostat avec consigne de température et presets
 
-Les interrupteurs SSR sont cachés (marqués `internal`) — la logique fil pilote est gérée automatiquement par le sélecteur. Le mode choisi est sauvegardé en mémoire flash et restauré après un redémarrage.
+Les interrupteurs SSR sont cachés (marqués `internal`) — la logique fil pilote est gérée automatiquement par le sélecteur ou le thermostat. Le mode choisi est sauvegardé en mémoire flash et restauré après un redémarrage.
 
 Exemple d'automatisation pour passer en mode Éco la nuit :
 
@@ -305,11 +338,12 @@ automation:
 
 **EN**
 
-Once the firmware is flashed and the board is powered, the MaxPilot device appears automatically in Home Assistant via ESPHome discovery. You will find a **select** entity:
+Once the firmware is flashed and the board is powered, the MaxPilot device appears automatically in Home Assistant via ESPHome discovery. You will find:
 
 - **Fil Pilote CH1** — mode selector with 4 options: Confort, Éco, Hors-gel, Arrêt
+- **Radiateur CH1** *(if climate enabled)* — thermostat with temperature setpoint and presets
 
-The SSR switches are hidden (marked `internal`) — the fil pilote logic is handled automatically by the selector. The chosen mode is saved to flash memory and restored after a reboot.
+The SSR switches are hidden (marked `internal`) — the fil pilote logic is handled automatically by the selector or thermostat. The chosen mode is saved to flash memory and restored after a reboot.
 
 Example automation to switch to Eco mode at night:
 
