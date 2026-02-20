@@ -82,7 +82,6 @@ MaxPilot uses **two MOC3041M optocouplers** per channel, with **1N4007 diodes**,
 ## Fonctionnalités / Features
 
 **FR**
-- 2 canaux indépendants de contrôle fil pilote (= 2 radiateurs ou zones)
 - Microcontrôleur ESP8266 (WeMos D1 Mini) avec WiFi intégré
 - Compatible ESPHome et Home Assistant
 - Alimentation AC/DC isolée (HLK-PM01, 5V)
@@ -91,7 +90,6 @@ MaxPilot uses **two MOC3041M optocouplers** per channel, with **1N4007 diodes**,
 - Fusible de protection 1A
 
 **EN**
-- 2 independent fil pilote control channels (= 2 radiators or zones)
 - ESP8266 microcontroller (WeMos D1 Mini) with built-in WiFi
 - Compatible with ESPHome and Home Assistant
 - Isolated AC/DC power supply (HLK-PM01, 5V)
@@ -190,12 +188,12 @@ Secteur AC ──► Fusible (F1) ──► Varistance (RV1) ──► HLK-PM01 
 | Réf | Valeur | Boîtier / Footprint | Qté | Description |
 |-----|--------|----------------------|-----|-------------|
 | F1 | 1A | Fuseholder_Blade_Mini_Keystone_3568 | 1 | Fusible / Fuse |
-| C1 | 22µF | C_Disc_D8.0mm_W2.5mm_P5.00mm | 1 | Condensateur / Capacitor |
+| C1 | 22µF 25V céramique | C_Disc_D8.0mm_W2.5mm_P5.00mm | 1 | Condensateur céramique / Ceramic capacitor |
 | U1 | WeMos D1 Mini | WEMOS_D1_mini_light | 1 | Microcontrôleur ESP8266 |
 | U2, U3 | MOC3041M | DIP-6_W7.62mm | 2 | Optocoupleur triac / Opto-triac |
 | R1, R2 | 570Ω | R_Axial_DIN0207 | 2 | Résistances / Resistors |
 | D1, D2 | 1N4007 | D_DO-41_SOD81 | 2 | Diodes de protection / Protection diodes |
-| RV1 | Varistance | RV_Disc_D12mm | 1 | Protection surtension / Surge protection |
+| RV1 | MOV 275V (14D431K) | RV_Disc_D12mm | 1 | Varistance 275V / 275V Varistor (surge protection) |
 | PS1 | HLK-PM01 | Converter_ACDC_HiLink_HLK-PMxx | 1 | Alimentation AC/DC 5V / AC-DC 5V PSU |
 | J1 | Bornier 3 pts | TerminalBlock_bornier-3_P5.08mm | 1 | Connecteur / Terminal block |
 
@@ -364,6 +362,36 @@ Fichiers inclus / Included files:
 > **FR** | **ATTENTION : Ce projet implique des tensions secteur (230V AC). L'installation et la manipulation doivent être effectuées par une personne qualifiée. Risque d'électrocution mortelle. Coupez toujours le courant avant toute intervention. La carte doit être installée dans un boîtier fermé et isolé.**
 
 > **EN** | **WARNING: This project involves mains voltage (230V AC). Installation and handling must be performed by a qualified person. Risk of fatal electric shock. Always disconnect power before any work. The board must be installed in a closed, insulated enclosure.**
+
+---
+
+## Améliorations possibles (v2) / Possible Improvements (v2)
+
+**FR**
+
+Le design actuel fonctionne correctement pour l'usage prévu. Voici des améliorations envisageables pour une future révision :
+
+1. **Fusible surdimensionné** — Le fusible 1A est généreux pour ce circuit (le HLK-PM01 consomme ~15mA et le fil pilote quelques mA). Un **fusible 250mA ou 500mA** offrirait une meilleure protection.
+
+2. **Pas de résistance de limitation en sortie des MOC3041M** — En cas de court-circuit accidentel du fil pilote vers la phase ou le neutre, le triac interne du MOC3041M (100mA RMS max) pourrait être endommagé. Ajouter une **résistance série de 330Ω à 1kΩ** sur la sortie protégerait le composant sans affecter le signal pilote.
+
+3. **Pas de protection sur la sortie fil pilote** — Une **diode TVS** ou une petite varistance sur le fil pilote protégerait contre les surtensions venant du côté radiateur.
+
+4. **Distances d'isolement sur le PCB** — Pour un circuit secteur, les normes IPC/IEC recommandent **>2,5mm de clearance** entre les pistes secteur et basse tension. À vérifier sur le layout actuel.
+
+---
+
+**EN**
+
+The current design works correctly for its intended use. Here are possible improvements for a future revision:
+
+1. **Oversized fuse** — The 1A fuse is generous for this circuit (the HLK-PM01 draws ~15mA and the pilot wire only a few mA). A **250mA or 500mA fuse** would provide tighter protection.
+
+2. **No current-limiting resistor on MOC3041M output** — If the pilot wire is accidentally shorted to live or neutral, the MOC3041M internal triac (100mA RMS max) could be damaged. Adding a **330Ω to 1kΩ series resistor** on the output would protect it without affecting the pilot signal.
+
+3. **No protection on pilot wire output** — A **TVS diode** or small varistor on the pilot wire would protect against surges coming from the radiator side.
+
+4. **PCB creepage distances** — For mains voltage circuits, IPC/IEC standards recommend **>2.5mm clearance** between mains and low-voltage traces. Should be verified on the current layout.
 
 ---
 
