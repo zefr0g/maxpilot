@@ -72,34 +72,32 @@ j1_world_cy = py0 + j1_cy;
 
 // ── Base ──────────────────────────────────────────────────────
 module base() {
-    difference() {
-        union() {
+    union() {
+        // Hollow shell (outer cube minus interior cavity and J1 cutout)
+        difference() {
             cube([ext_l, ext_w, base_h]);
 
-            // PCB standoff bosses
-            for (i = [0:3])
-                translate([bp(i)[0], bp(i)[1], floor_t])
-                    cylinder(d=boss_d, h=boss_h);
+            // Interior cavity
+            translate([wall, wall, floor_t])
+                cube([int_l, int_w, int_h + 0.01]);
+
+            // J1 wire entry cutout (left wall)
+            translate([-0.01,
+                       j1_world_cy - j1_cw/2,
+                       floor_t + j1_cz0])
+                cube([wall + 0.02, j1_cw, j1_ch]);
         }
 
-        // Interior cavity
-        translate([wall, wall, floor_t])
-            cube([int_l, int_w, int_h + 0.01]);
-
-        // Screw access holes through floor (for M2 from above: head stays inside)
-        // — bosses have blind holes from above, no floor holes needed.
-        // Floor holes would be needed only for bottom-entry screws.
-
-        // M2 blind holes in boss tops (self-tapping, 4 mm deep)
+        // PCB standoff bosses (added after interior subtraction so they survive)
         for (i = [0:3])
-            translate([bp(i)[0], bp(i)[1], floor_t + boss_h - 4.0])
-                cylinder(d=screw_d, h=4.1);
+            difference() {
+                translate([bp(i)[0], bp(i)[1], floor_t])
+                    cylinder(d=boss_d, h=boss_h);
 
-        // J1 wire entry cutout (left wall)
-        translate([-0.01,
-                   j1_world_cy - j1_cw/2,
-                   floor_t + j1_cz0])
-            cube([wall + 0.02, j1_cw, j1_ch]);
+                // M2 blind hole in boss top (self-tapping, 4 mm deep)
+                translate([bp(i)[0], bp(i)[1], floor_t + boss_h - 4.0])
+                    cylinder(d=screw_d, h=4.1);
+            }
     }
 }
 
@@ -127,14 +125,16 @@ module lid() {
 }
 
 // ── Render ────────────────────────────────────────────────────
-// Base — print upright, open face up
-color("SteelBlue", 0.85) base();
+// Set part = "base" | "lid" | "both" (default: "both" for preview)
+part = "both";
 
-// Lid — shown above base for preview
-// Print orientation: lid_t face DOWN (lip pointing up, then flip to install)
-color("LightSteelBlue", 0.7)
-    translate([0, 0, base_h + 8])
-        lid();
+if (part == "base" || part == "both")
+    color("SteelBlue", 0.85) base();
+
+if (part == "lid" || part == "both")
+    color("LightSteelBlue", 0.7)
+        translate([0, 0, (part == "both") ? base_h + 8 : 0])
+            lid();
 
 // ── Dimensions (echo) ─────────────────────────────────────────
 echo(str("Box exterior: ", ext_l, " × ", ext_w, " × ", base_h + lid_t, " mm"));
