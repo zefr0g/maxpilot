@@ -4746,5 +4746,17 @@
 		(net 22)
 		(uuid "d2a7655b-ce45-4769-abf9-c52b7414a431")
 	)
+	(gr_text "CERN-OHL-S v2"
+		(at 62.23 49.5)
+		(layer "B.SilkS")
+		(uuid "a2b3c4d5-e6f7-8901-abcd-ef1234567890")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+			(justify mirror)
+		)
+	)
 	(embedded_fonts no)
 )
