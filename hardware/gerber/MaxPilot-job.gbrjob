@@ -3,9 +3,9 @@
     "GenerationSoftware": {
       "Vendor": "KiCad",
       "Application": "Pcbnew",
-      "Version": "6.0.2+dfsg-1"
+      "Version": "9.0.3+dfsg-1"
     },
-    "CreationDate": "2023-09-22T14:52:28+02:00"
+    "CreationDate": "2026-02-21T17:58:44+01:00"
   },
   "GeneralSpecs": {
     "ProjectId": {
@@ -32,47 +32,47 @@
   ],
   "FilesAttributes": [
     {
-      "Path": "MaxPilot-F_Cu.gbr",
+      "Path": "MaxPilot-F_Cu.gtl",
       "FileFunction": "Copper,L1,Top",
       "FilePolarity": "Positive"
     },
     {
-      "Path": "MaxPilot-B_Cu.gbr",
+      "Path": "MaxPilot-B_Cu.gbl",
       "FileFunction": "Copper,L2,Bot",
       "FilePolarity": "Positive"
     },
     {
-      "Path": "MaxPilot-F_Paste.gbr",
+      "Path": "MaxPilot-F_Paste.gtp",
       "FileFunction": "SolderPaste,Top",
       "FilePolarity": "Positive"
     },
     {
-      "Path": "MaxPilot-B_Paste.gbr",
+      "Path": "MaxPilot-B_Paste.gbp",
       "FileFunction": "SolderPaste,Bot",
       "FilePolarity": "Positive"
     },
     {
-      "Path": "MaxPilot-F_Silkscreen.gbr",
+      "Path": "MaxPilot-F_Silkscreen.gto",
       "FileFunction": "Legend,Top",
       "FilePolarity": "Positive"
     },
     {
-      "Path": "MaxPilot-B_Silkscreen.gbr",
+      "Path": "MaxPilot-B_Silkscreen.gbo",
       "FileFunction": "Legend,Bot",
       "FilePolarity": "Positive"
     },
     {
-      "Path": "MaxPilot-F_Mask.gbr",
+      "Path": "MaxPilot-F_Mask.gts",
       "FileFunction": "SolderMask,Top",
       "FilePolarity": "Negative"
     },
     {
-      "Path": "MaxPilot-B_Mask.gbr",
+      "Path": "MaxPilot-B_Mask.gbs",
       "FileFunction": "SolderMask,Bot",
       "FilePolarity": "Negative"
     },
     {
-      "Path": "MaxPilot-Edge_Cuts.gbr",
+      "Path": "MaxPilot-Edge_Cuts.gm1",
       "FileFunction": "Profile",
       "FilePolarity": "Positive"
     }
