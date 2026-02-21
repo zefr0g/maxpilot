@@ -30,6 +30,7 @@ gap      = 1.0;  // clearance around PCB edges
 standoff = 5.0;  // boss height = PCB clearance above floor
 comp_h   = 22.0; // tallest component above PCB (HLK-PM01 ~20 mm)
 top_clr  = 2.0;  // clearance above tallest component
+corner_r = 3.0;  // exterior corner radius (vertical edges)
 
 // ── Lid ───────────────────────────────────────────────────────
 lid_t    = 3.0;  // lid plate thickness
@@ -70,12 +71,21 @@ function bp(i) = [px0 + mh[i][0], py0 + mh[i][1]];
 // J1 cutout centre Y in box world
 j1_world_cy = py0 + j1_cy;
 
+// ── Helpers ───────────────────────────────────────────────────
+// Rounded rectangle prism — vertical edges only (fast, no minkowski)
+module rounded_rect(l, w, h, r) {
+    hull()
+        for (dx = [r, l-r], dy = [r, w-r])
+            translate([dx, dy, 0])
+                cylinder(r=r, h=h);
+}
+
 // ── Base ──────────────────────────────────────────────────────
 module base() {
     union() {
-        // Hollow shell (outer cube minus interior cavity and J1 cutout)
+        // Hollow shell (outer rounded box minus interior cavity and J1 cutout)
         difference() {
-            cube([ext_l, ext_w, base_h]);
+            rounded_rect(ext_l, ext_w, base_h, corner_r);
 
             // Interior cavity
             translate([wall, wall, floor_t])
@@ -108,7 +118,7 @@ module lid() {
 
     union() {
         // Lid plate
-        cube([ext_l, ext_w, lid_t]);
+        rounded_rect(ext_l, ext_w, lid_t, corner_r);
 
         // Friction-fit lip (hangs into base interior when installed)
         translate([(ext_l - lip_ol) / 2,
