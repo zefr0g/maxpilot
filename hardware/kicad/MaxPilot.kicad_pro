@@ -535,11 +535,15 @@
       },
       {
         "netclass": "Line",
-        "pattern": "Net-(D2-Pad2)"
+        "pattern": "LINE_P"
       },
       {
         "netclass": "Line",
-        "pattern": "LINE_P"
+        "pattern": "Net-(D1-K)"
+      },
+      {
+        "netclass": "Line",
+        "pattern": "Net-(D2-A)"
       }
     ]
   },
