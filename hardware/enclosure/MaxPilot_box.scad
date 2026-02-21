@@ -104,50 +104,51 @@ function ep(i) = [[corner_r - ear_ofs,      corner_r - ear_ofs     ],
 
 // ── Base ──────────────────────────────────────────────────────
 module base() {
-    difference() {
-        union() {
-            // Hollow shell (outer rounded box minus interior cavity and J1 cutout)
-            difference() {
-                rounded_rect(ext_l, ext_w, base_h, corner_r);
+    union() {
+        // Shell + ear tabs, with interior re-subtracted from ears and pilot holes drilled
+        difference() {
+            union() {
+                // Hollow shell
+                difference() {
+                    rounded_rect(ext_l, ext_w, base_h, corner_r);
 
-                // Interior cavity
-                translate([wall, wall, floor_t])
-                    cube([int_l, int_w, int_h + 0.01]);
+                    translate([wall, wall, floor_t])
+                        cube([int_l, int_w, int_h + 0.01]);
 
-                // J1 wire entry cutout (left wall)
-                translate([-0.01,
-                           j1_world_cy - j1_cw/2,
-                           floor_t + j1_cz0])
-                    cube([wall + 0.02, j1_cw, j1_ch]);
+                    translate([-0.01,
+                               j1_world_cy - j1_cw/2,
+                               floor_t + j1_cz0])
+                        cube([wall + 0.02, j1_cw, j1_ch]);
+                }
+
+                // Corner ear tabs
+                for (i = [0:3])
+                    hull() {
+                        translate([sp(i)[0], sp(i)[1], 0]) cylinder(r=corner_r, h=base_h);
+                        translate([ep(i)[0], ep(i)[1], 0]) cylinder(r=ear_r,    h=base_h);
+                    }
             }
 
-            // PCB standoff bosses
-            for (i = [0:3])
-                difference() {
-                    translate([bp(i)[0], bp(i)[1], floor_t])
-                        cylinder(d=boss_d, h=boss_h);
+            // Re-subtract interior so ear hulls don't intrude into box cavity
+            translate([wall, wall, floor_t])
+                cube([int_l, int_w, int_h + 0.01]);
 
-                    // M2 blind hole in boss top (self-tapping, 4 mm deep)
-                    translate([bp(i)[0], bp(i)[1], floor_t + boss_h - 4.0])
-                        cylinder(d=screw_d, h=4.1);
-                }
-
-            // Corner ear tabs (external bosses for lid screws)
+            // M3 pilot holes in ear tabs (self-tapping, from top)
             for (i = [0:3])
-                hull() {
-                    translate([sp(i)[0], sp(i)[1], 0]) cylinder(r=corner_r, h=base_h);
-                    translate([ep(i)[0], ep(i)[1], 0]) cylinder(r=ear_r,    h=base_h);
-                }
+                translate([ep(i)[0], ep(i)[1], base_h - scr_depth])
+                    cylinder(d=scr_pilot, h=scr_depth + 0.01);
         }
 
-        // Re-subtract interior so ear hulls don't intrude into box cavity
-        translate([wall, wall, floor_t])
-            cube([int_l, int_w, int_h + 0.01]);
-
-        // M3 pilot holes in ear tabs (self-tapping, from top)
+        // PCB standoff bosses — added to outer union so interior re-subtraction above
+        // does not remove them (same fix as original CSG issue)
         for (i = [0:3])
-            translate([ep(i)[0], ep(i)[1], base_h - scr_depth])
-                cylinder(d=scr_pilot, h=scr_depth + 0.01);
+            difference() {
+                translate([bp(i)[0], bp(i)[1], floor_t])
+                    cylinder(d=boss_d, h=boss_h);
+
+                translate([bp(i)[0], bp(i)[1], floor_t + boss_h - 4.0])
+                    cylinder(d=screw_d, h=4.1);
+            }
     }
 }
 
