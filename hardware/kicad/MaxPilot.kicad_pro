@@ -544,6 +544,10 @@
       {
         "netclass": "Line",
         "pattern": "Net-(D2-A)"
+      },
+      {
+        "netclass": "Line",
+        "pattern": "*NC-Pad5*"
       }
     ]
   },
