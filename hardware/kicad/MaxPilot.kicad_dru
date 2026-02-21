@@ -1,0 +1,27 @@
+(version 1)
+
+# Safety constraints for 230V AC mains — IPC-2221B / IEC 62368-1
+#
+# "Line" net class covers: LINE, NEUT, /PILOT (all mains-voltage nets)
+#
+# IPC-2221B B1 (external, uncoated, 170–300 V):
+#   clearance  ≥ 3.2 mm  → using 3.0 mm as minimum (tightened by layout)
+# IEC 62368-1 pollution degree 2, basic insulation, 230 V AC:
+#   creepage   ≥ 5.0 mm
+# Between LINE, NEUT, PILOT themselves (same mains group):
+#   clearance  ≥ 2.5 mm  (flags J1 at 5.08 mm pitch → need 7.62 mm pitch)
+
+(rule "Mains_to_LV_Clearance"
+    (constraint clearance (min 3.0mm))
+    (condition "(A.NetClass == 'Line') && (B.NetClass != 'Line')")
+)
+
+(rule "Mains_to_LV_Creepage"
+    (constraint creepage (min 5.0mm))
+    (condition "(A.NetClass == 'Line') && (B.NetClass != 'Line')")
+)
+
+(rule "Mains_Internal_Clearance"
+    (constraint clearance (min 2.5mm))
+    (condition "(A.NetClass == 'Line') && (B.NetClass == 'Line')")
+)
