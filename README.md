@@ -384,11 +384,12 @@ automation:
 | ![PCB Front](images/MaxPilot-pcb-front.svg) | ![PCB Back](images/MaxPilot-pcb-back.svg) |
 
 Fichiers inclus dans `hardware/gerber/` / Included files in `hardware/gerber/`:
-- `MaxPilot-F_Cu.gbr` / `MaxPilot-B_Cu.gbr` — Cuivre / Copper layers
-- `MaxPilot-F_Mask.gbr` / `MaxPilot-B_Mask.gbr` — Masque de soudure / Solder mask
-- `MaxPilot-F_Silkscreen.gbr` / `MaxPilot-B_Silkscreen.gbr` — Sérigraphie / Silkscreen
-- `MaxPilot-Edge_Cuts.gbr` — Contour de la carte / Board outline
+- `MaxPilot-F_Cu.gtl` / `MaxPilot-B_Cu.gbl` — Cuivre / Copper layers
+- `MaxPilot-F_Mask.gts` / `MaxPilot-B_Mask.gbs` — Masque de soudure / Solder mask
+- `MaxPilot-F_Silkscreen.gto` / `MaxPilot-B_Silkscreen.gbo` — Sérigraphie / Silkscreen
+- `MaxPilot-Edge_Cuts.gm1` — Contour de la carte / Board outline
 - `MaxPilot-PTH.drl` / `MaxPilot-NPTH.drl` — Perçages / Drill files
+- `MaxPilot-job.gbrjob` — Fichier de travail Gerber / Gerber job file
 
 Fichiers d'assemblage dans `hardware/` / Assembly files in `hardware/`:
 - `MaxPilot-top.pos` / `MaxPilot-bottom.pos` — Positions des composants / Component placement
