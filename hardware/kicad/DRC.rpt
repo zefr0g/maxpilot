@@ -1,16 +1,16 @@
 ** Drc report for MaxPilot.kicad_pcb **
-** Created on 2026-02-21T18:42:17+0100 **
+** Created on 2026-02-21T20:08:29+0100 **
 
 ** Found 9 DRC violations **
 [lib_footprint_mismatch]: L’empreinte 'R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal' ne correspond pas à la copie en librairie 'Resistor_THT'.
     Forçage local; warning
-    @(76,2000 mm, 15,2400 mm): Empreinte R2
+    @(73,6600 mm, 25,4000 mm): Empreinte R2
 [lib_footprint_mismatch]: L’empreinte 'MOC3041M_DIP6_W7.62mm_NC5' ne correspond pas à la copie en librairie 'MaxPilot'.
     Forçage local; warning
     @(45,7200 mm, 25,4000 mm): Empreinte U3
 [lib_footprint_mismatch]: L’empreinte 'R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal' ne correspond pas à la copie en librairie 'Resistor_THT'.
     Forçage local; warning
-    @(76,2000 mm, 20,3200 mm): Empreinte R1
+    @(73,6600 mm, 15,2400 mm): Empreinte R1
 [lib_footprint_issues]: Empreinte 'Converter_ACDC_HiLink_HLK-PMxx' introuvable dans la librairie 'Converter_ACDC'.
     Forçage local; warning
     @(45,7200 mm, 36,9050 mm): Empreinte PS1
@@ -28,7 +28,7 @@
     @(30,4800 mm, 45,7200 mm): Empreinte D2
 [lib_footprint_mismatch]: L’empreinte 'C_Disc_D8.0mm_W2.5mm_P5.00mm' ne correspond pas à la copie en librairie 'Capacitor_THT'.
     Forçage local; warning
-    @(71,2000 mm, 25,4000 mm): Empreinte C1
+    @(73,5800 mm, 20,3200 mm): Empreinte C1
 
 ** Found 0 unconnected pads **
 
