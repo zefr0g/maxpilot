@@ -37,6 +37,7 @@ lid_t    = 3.0;  // lid plate thickness
 lip_h    = 5.0;  // friction-fit lip depth
 lip_t    = 2.0;  // lip wall thickness
 lip_clr  = 0.2;  // clearance each side (adjust for printer tolerance)
+engrave_d = 0.5; // engraving depth for lid text
 
 // ── Bosses (M2 standoffs) ────────────────────────────────────
 boss_d   = 5.5;  // boss outer diameter
@@ -189,6 +190,12 @@ module lid() {
             translate([ep(i)[0], ep(i)[1], lid_t - scr_cbore_h])
                 cylinder(d=scr_cbore, h=scr_cbore_h + 0.01);
         }
+
+        // "MaxPilot" engraved on outer face
+        translate([ext_l/2, ext_w/2, lid_t - engrave_d])
+            linear_extrude(engrave_d + 0.01)
+                text("MaxPilot", size=8, halign="center", valign="center",
+                     font="Liberation Sans:style=Bold");
     }
 }
 
