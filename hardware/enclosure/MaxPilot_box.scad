@@ -1,20 +1,18 @@
 /* ================================================================
-   MaxPilot PCB Enclosure — v2.2
+   MaxPilot PCB Enclosure — v2.3
    PCB: 99.06 × 38.1 mm, 4× M2 mounting holes
    Mains wire entry: left wall (J1 terminal block)
 
    Assembly:
      1. Print base (open face up, no supports needed)
      2. Print lid (inner face on build plate, no supports needed)
-     3. Lower PCB straight into box until ~12 mm from top, then tilt
-        slightly ("de travers") to slip corners past the 4 top pillars,
-        and lower onto the M2 bosses
+     3. Drop PCB straight into box — no tilt needed
      4. Secure PCB with 4× M2×6 pan-head screws (self-tapping in PLA)
-     5. Place lid, screw down with 4× M3×12 pan-head screws
+     5. Place lid, screw down with 4× M3×13 pan-head screws
 
    Hardware:
-     4× M2×6  pan-head screws  (PCB  → M2 boss at base of pillar)
-     4× M3×12 pan-head screws  (lid  → M3 pilot at pillar tip)
+     4× M2×6  pan-head screws  (PCB  → M2 bosses at floor)
+     4× M3×13 pan-head screws  (lid  → M3 pilots at corner pillars)
    ================================================================ */
 
 $fn = 64;
@@ -28,9 +26,9 @@ pcb_t = 1.6;     // PCB thickness
 mh = [[2.54, 2.54], [96.52, 2.54], [2.54, 35.56], [96.52, 35.56]];
 
 // ── Box ───────────────────────────────────────────────────────
-wall     = 2.5;  // wall thickness (thinned; gap widened to keep same exterior)
+wall     = 2.5;  // wall thickness
 floor_t  = 3.0;  // base floor thickness
-gap      = 1.5;  // clearance around PCB edges
+gap      = 6.0;  // clearance around PCB — large enough for straight insertion
 standoff = 5.0;  // boss height = PCB bottom clearance above floor
 comp_h   = 19.0; // tallest component above PCB (trimmed 3 mm from measured fit)
 top_clr  = 2.0;  // clearance above tallest component
@@ -40,20 +38,18 @@ corner_r = 3.0;  // exterior corner radius (vertical edges)
 lid_t     = 3.0;  // lid plate thickness
 engrave_d = 0.5;  // engraving depth for lid text
 
-// ── M2 PCB bosses (bottom, unchanged from v2.0) ───────────────
+// ── M2 PCB bosses (at PCB mounting hole positions) ────────────
 boss_d   = 5.5;  // boss outer diameter
 boss_h   = standoff;
 m2_pilot = 1.8;  // M2 self-tapping pilot hole diameter
 
-// ── Short top pillars (conical, near box rim only) ────────────
-// These start pillar_h mm from the top — the rest of the box is
-// clear so the PCB drops in freely until the last ~12 mm.
-// pillar_rim_d (wide, at top/rim) merges with corner walls so
-// the pillar prints without supports and is solid.
-// Cone tapers downward to pillar_foot_d (narrow at bottom).
-pillar_h      = 12.0; // height from box rim down to pillar foot
-pillar_rim_d  = 7.0;  // diameter at rim (top) — merges with corner walls
-pillar_foot_d = 5.0;  // diameter at foot (bottom, narrow end)
+// ── Corner lid pillars ────────────────────────────────────────
+// Positioned at the 4 interior corners — completely outside the
+// PCB footprint so the PCB drops in straight without obstruction.
+// Wide at rim (fused to both corner walls), narrow at foot.
+pillar_h      = 12.0; // height from box rim downward
+pillar_rim_d  =  5.0; // diameter at rim (top, wide — merges with corner walls)
+pillar_foot_d =  3.0; // diameter at foot (bottom, narrow)
 
 // Lid / M3 screw parameters
 m3_pilot  = 2.5;  // M3 self-tapping pilot hole diameter
@@ -65,8 +61,8 @@ lid_cbore_h = 2.0; // counterbore depth
 // ── J1 terminal block cutout ─────────────────────────────────
 j1_cy  = 20.32;
 j1_cw  = 22.0;
-j1_cz0 = standoff + 1.0;   // wire entry starts just above PCB surface
-j1_ch  = pcb_t + 6.0;     // 7.6 mm — enough for 3 × 2.5 mm² leads
+j1_cz0 = standoff + 1.0;  // wire entry starts just above PCB surface
+j1_ch  = pcb_t + 6.0;    // 7.6 mm — enough for 3 × 2.5 mm² leads
 
 // ── Derived ───────────────────────────────────────────────────
 int_l  = pcb_l + 2*gap;
@@ -79,7 +75,15 @@ base_h = floor_t + int_h;
 px0 = wall + gap;
 py0 = wall + gap;
 
+// PCB boss positions (world coords, at PCB mounting holes)
 function bp(i) = [px0 + mh[i][0], py0 + mh[i][1]];
+
+// Lid pillar positions (world coords, at interior corners)
+// Pillar rim radius = pillar_rim_d/2; centre sits that far from each wall
+function lp(i) = [
+    (i == 0 || i == 2) ? wall + pillar_rim_d/2 : ext_l - wall - pillar_rim_d/2,
+    (i == 0 || i == 1) ? wall + pillar_rim_d/2 : ext_w - wall - pillar_rim_d/2
+];
 
 j1_world_cy = py0 + j1_cy;
 
@@ -91,12 +95,11 @@ module rounded_rect(l, w, h, r) {
                 cylinder(r=r, h=h);
 }
 
-// ── Short top pillar ──────────────────────────────────────────
-// Cone tapers from pillar_foot_d (bottom) up to pillar_rim_d (top).
-// Top is fused into the corner walls via hull() with the exterior
-// corner arc — no gap between pillar and walls at the rim.
+// ── Corner lid pillar ─────────────────────────────────────────
+// Cone: wide at rim, narrow at foot — no supports needed.
+// Top fused into the corner via hull() with the exterior corner arc.
 module top_pillar(i) {
-    pos = bp(i);
+    pos = lp(i);
     z0  = base_h - pillar_h;
 
     // Exterior rounded-corner arc centre for this pillar's corner
@@ -107,10 +110,8 @@ module top_pillar(i) {
 
     difference() {
         union() {
-            // Conical body
             translate([pos[0], pos[1], z0])
                 cylinder(d1=pillar_foot_d, d2=pillar_rim_d, h=pillar_h);
-            // Fuse top into corner: hull between pillar top and corner arc
             hull() {
                 translate([pos[0], pos[1], base_h - fuse_h])
                     cylinder(d=pillar_rim_d, h=fuse_h);
@@ -136,8 +137,7 @@ module base() {
                 cube([wall + 0.02, j1_cw, j1_ch]);
         }
 
-        // M2 PCB bosses — added to outer union so interior subtraction
-        // above does not remove them
+        // M2 PCB bosses at mounting hole positions
         for (i = [0:3])
             difference() {
                 translate([bp(i)[0], bp(i)[1], floor_t])
@@ -146,24 +146,22 @@ module base() {
                     cylinder(d=m2_pilot, h=4.1);
             }
 
-        // Short top pillars — also added to outer union
+        // Corner lid pillars
         for (i = [0:3])
             top_pillar(i);
     }
 }
 
 // ── Lid ───────────────────────────────────────────────────────
-// Flat plate; held by 4 M3 screws into the top pillar tips.
-// Print: inner face on build plate, outer face up — no supports.
 module lid() {
     difference() {
         rounded_rect(ext_l, ext_w, lid_t, corner_r);
 
-        // M3 clearance holes + counterbores (outer / top face)
+        // M3 clearance holes + counterbores aligned with corner pillars
         for (i = [0:3]) {
-            translate([bp(i)[0], bp(i)[1], -0.01])
+            translate([lp(i)[0], lp(i)[1], -0.01])
                 cylinder(d=lid_clr_d, h=lid_t + 0.02);
-            translate([bp(i)[0], bp(i)[1], lid_t - lid_cbore_h])
+            translate([lp(i)[0], lp(i)[1], lid_t - lid_cbore_h])
                 cylinder(d=lid_cbore_d, h=lid_cbore_h + 0.01);
         }
 
@@ -186,12 +184,11 @@ if (part == "lid" || part == "both")
         if (part == "both")
             translate([0, 0, base_h + 8]) lid();
         else
-            lid();  // print: inner face on build plate
+            lid();
 
 // ── Dimensions (echo) ─────────────────────────────────────────
 echo(str("Box exterior: ", ext_l, " × ", ext_w, " × ", base_h + lid_t, " mm"));
 echo(str("Base height:  ", base_h, " mm"));
-echo(str("Clear interior height (below pillars): ", base_h - pillar_h - floor_t, " mm"));
-echo(str("Pillar zone height: ", pillar_h, " mm from top"));
+echo(str("PCB clearance: ", gap, " mm each side"));
 echo(str("Lid screws: 4× M3×", ceil(lid_t + m3_depth), " pan-head self-tapping"));
 echo(str("PCB screws: 4× M2×6 pan-head self-tapping"));
