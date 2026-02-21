@@ -4059,8 +4059,8 @@
 		(layer "Edge.Cuts")
 		(uuid "f47374c3-cb2a-4769-880f-830c9b19222e")
 	)
-	(gr_text "MaxPilot"
-		(at 35.56 48.26 0)
+	(gr_text "MaxPilot V2"
+		(at 30.48 48.26 0)
 		(layer "F.SilkS")
 		(uuid "0239a7dc-4f11-4dd5-9564-b10e3cb51ffa")
 		(effects
@@ -4071,14 +4071,14 @@
 			)
 		)
 	)
-	(gr_text "V2"
-		(at 40.64 48.26 0)
+	(gr_text "CERN-OHL-S v2"
+		(at 30.48 49.5 0)
 		(layer "F.SilkS")
-		(uuid "7f4c333e-95dd-4f0c-b8a5-bc57a1ff22fb")
+		(uuid "a2b3c4d5-e6f7-8901-abcd-ef1234567890")
 		(effects
 			(font
-				(size 1 1)
-				(thickness 0.15)
+				(size 0.8 0.8)
+				(thickness 0.12)
 			)
 		)
 	)
@@ -4745,18 +4745,6 @@
 		(layer "B.Cu")
 		(net 22)
 		(uuid "d2a7655b-ce45-4769-abf9-c52b7414a431")
-	)
-	(gr_text "CERN-OHL-S v2"
-		(at 62.23 49.5)
-		(layer "B.SilkS")
-		(uuid "a2b3c4d5-e6f7-8901-abcd-ef1234567890")
-		(effects
-			(font
-				(size 0.8 0.8)
-				(thickness 0.12)
-			)
-			(justify mirror)
-		)
 	)
 	(embedded_fonts no)
 )
