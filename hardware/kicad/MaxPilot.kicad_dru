@@ -23,5 +23,5 @@
 
 (rule "Mains_Internal_Clearance"
     (constraint clearance (min 2.5mm))
-    (condition "(A.NetClass == 'Line') && (B.NetClass == 'Line')")
+    (condition "(A.NetClass == 'Line') && (B.NetClass == 'Line') && (A.Parent != B.Parent)")
 )

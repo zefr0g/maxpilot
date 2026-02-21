@@ -1,71 +1,37 @@
 ** Drc report for MaxPilot.kicad_pcb **
-** Created on 2026-02-21T14:50:16+0100 **
+** Created on 2026-02-21T17:32:58+0100 **
 
-** Found 16 DRC violations **
-[clearance]: Violation d'isolation (règle 'Mains_Internal_Clearance' isolation 2,5000 mm; réel 2,0064 mm)
-    Règle: Mains_Internal_Clearance; error
-    @(53,5783 mm, 44,4600 mm): Piste [LINE_P] sur B.Cu, long. 3,2551 mm
-    @(48,2450 mm, 44,4600 mm): Pad métallisé 6 [Net-(D2-A)] de U3
-[clearance]: Violation d'isolation (règle 'Mains_Internal_Clearance' isolation 2,5000 mm; réel 2,4473 mm)
-    Règle: Mains_Internal_Clearance; error
-    @(17,7800 mm, 38,1000 mm): Piste [NEUT] sur F.Cu, long. 12,2471 mm
-    @(29,2700 mm, 26,1400 mm): Pad métallisé 1 [LINE] de RV1
-[clearance]: Violation d'isolation (règle 'Mains_to_LV_Clearance' isolation 3,0000 mm; réel 0,7400 mm)
-    Règle: Mains_to_LV_Clearance; error
-    @(58,4200 mm, 44,4600 mm): Pad métallisé 5 [unconnected-(U2-NC-Pad5)] de U2
-    @(60,9600 mm, 44,4600 mm): Piste [Net-(D1-K)] sur F.Cu, long. 2,3017 mm
-[clearance]: Violation d'isolation (règle 'Mains_to_LV_Clearance' isolation 3,0000 mm; réel 1,7698 mm)
-    Règle: Mains_to_LV_Clearance; error
-    @(54,2969 mm, 41,7652 mm): Piste [Net-(R2-Pad2)] sur F.Cu, long. 11,7416 mm
-    @(55,8800 mm, 44,4600 mm): Pad métallisé 4 [LINE_P] de U2
-[clearance]: Violation d'isolation (règle 'Mains_to_LV_Clearance' isolation 3,0000 mm; réel 0,7400 mm)
-    Règle: Mains_to_LV_Clearance; error
-    @(55,8800 mm, 44,4600 mm): Piste [LINE_P] sur B.Cu, long. 2,3017 mm
-    @(58,4200 mm, 44,4600 mm): Pad métallisé 5 [unconnected-(U2-NC-Pad5)] de U2
-[clearance]: Violation d'isolation (règle 'Mains_Internal_Clearance' isolation 2,5000 mm; réel 0,5017 mm)
-    Règle: Mains_Internal_Clearance; error
-    @(43,1650 mm, 44,4600 mm): Pad métallisé 4 [LINE_P] de U3
-    @(42,2200 mm, 42,1583 mm): Piste [Net-(D2-A)] sur F.Cu, long. 6,0250 mm
-[clearance]: Violation d'isolation (règle 'Mains_to_LV_Clearance' isolation 3,0000 mm; réel 1,6236 mm)
-    Règle: Mains_to_LV_Clearance; error
-    @(60,7600 mm, 46,9617 mm): Piste [Net-(D1-K)] sur F.Cu, long. 0,2828 mm
-    @(58,4200 mm, 44,4600 mm): Pad métallisé 5 [unconnected-(U2-NC-Pad5)] de U2
-[clearance]: Violation d'isolation (règle 'Mains_to_LV_Clearance' isolation 3,0000 mm; réel 0,5017 mm)
-    Règle: Mains_to_LV_Clearance; error
-    @(51,2766 mm, 46,7617 mm): Piste [LINE_P] sur B.Cu, long. 8,1116 mm
-    @(45,7050 mm, 44,4600 mm): Pad métallisé 5 [unconnected-(U3-NC-Pad5)] de U3
-[clearance]: Violation d'isolation (règle 'Mains_Internal_Clearance' isolation 2,5000 mm; réel 1,4000 mm)
-    Règle: Mains_Internal_Clearance; error
-    @(26,4400 mm, 29,4400 mm): Piste [NEUT] sur F.Cu, long. 8,8300 mm
-    @(29,2700 mm, 26,1400 mm): Pad métallisé 1 [LINE] de RV1
-[clearance]: Violation d'isolation (règle 'Mains_to_LV_Clearance' isolation 3,0000 mm; réel 2,6288 mm)
-    Règle: Mains_to_LV_Clearance; error
-    @(43,1650 mm, 36,8400 mm): Pad métallisé 3 [unconnected-(U3-NC-Pad3)] de U3
-    @(38,1617 mm, 38,1000 mm): Piste [Net-(D2-A)] sur F.Cu, long. 5,7393 mm
-[clearance]: Violation d'isolation (règle 'Mains_Internal_Clearance' isolation 2,5000 mm; réel 0,7017 mm)
-    Règle: Mains_Internal_Clearance; error
-    @(39,4034 mm, 46,9617 mm): Piste [Net-(D1-K)] sur F.Cu, long. 21,3566 mm
-    @(43,1650 mm, 44,4600 mm): Pad métallisé 4 [LINE_P] de U3
-[clearance]: Violation d'isolation (règle 'Mains_to_LV_Clearance' isolation 3,0000 mm; réel 2,2004 mm)
-    Règle: Mains_to_LV_Clearance; error
-    @(55,8800 mm, 44,4600 mm): Pad métallisé 4 [LINE_P] de U2
-    @(49,3717 mm, 36,8400 mm): Piste [Net-(R2-Pad2)] sur F.Cu, long. 6,9653 mm
-[clearance]: Violation d'isolation (règle 'Mains_to_LV_Clearance' isolation 3,0000 mm; réel 0,7400 mm)
-    Règle: Mains_to_LV_Clearance; error
-    @(48,2450 mm, 44,4600 mm): Piste [Net-(D2-A)] sur F.Cu, long. 2,3017 mm
-    @(45,7050 mm, 44,4600 mm): Pad métallisé 5 [unconnected-(U3-NC-Pad5)] de U3
-[clearance]: Violation d'isolation (règle 'Mains_to_LV_Clearance' isolation 3,0000 mm; réel 0,7400 mm)
-    Règle: Mains_to_LV_Clearance; error
-    @(43,1650 mm, 44,4600 mm): Piste [LINE_P] sur B.Cu, long. 2,3017 mm
-    @(45,7050 mm, 44,4600 mm): Pad métallisé 5 [unconnected-(U3-NC-Pad5)] de U3
-[clearance]: Violation d'isolation (règle 'Mains_to_LV_Clearance' isolation 3,0000 mm; réel 0,5017 mm)
-    Règle: Mains_to_LV_Clearance; error
-    @(53,5783 mm, 27,5408 mm): Piste [LINE_P] sur B.Cu, long. 16,9192 mm
-    @(55,8800 mm, 36,8400 mm): Pad métallisé 3 [unconnected-(U2-NC-Pad3)] de U2
-[clearance]: Violation d'isolation (règle 'Mains_Internal_Clearance' isolation 2,5000 mm; réel 1,3855 mm)
-    Règle: Mains_Internal_Clearance; error
-    @(46,3975 mm, 20,3600 mm): Piste [LINE_P] sur B.Cu, long. 10,1552 mm
-    @(46,3975 mm, 25,3600 mm): Pad métallisé 2 [NEUT] de PS1
+** Found 10 DRC violations **
+[lib_footprint_mismatch]: L’empreinte 'R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal' ne correspond pas à la copie en librairie 'Resistor_THT'.
+    Forçage local; warning
+    @(76,2000 mm, 15,2400 mm): Empreinte R2
+[lib_footprint_mismatch]: L’empreinte 'MOC3041M_DIP6_W7.62mm_NC5' ne correspond pas à la copie en librairie 'MaxPilot'.
+    Forçage local; warning
+    @(43,1800 mm, 25,4000 mm): Empreinte U3
+[lib_footprint_mismatch]: L’empreinte 'R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal' ne correspond pas à la copie en librairie 'Resistor_THT'.
+    Forçage local; warning
+    @(76,2000 mm, 20,3200 mm): Empreinte R1
+[lib_footprint_issues]: Empreinte 'Converter_ACDC_HiLink_HLK-PMxx' introuvable dans la librairie 'Converter_ACDC'.
+    Forçage local; warning
+    @(45,7200 mm, 36,9050 mm): Empreinte PS1
+[lib_footprint_mismatch]: L’empreinte 'MOC3041M_DIP6_W7.62mm_NC5' ne correspond pas à la copie en librairie 'MaxPilot'.
+    Forçage local; warning
+    @(55,8800 mm, 22,8600 mm): Empreinte U2
+[lib_footprint_issues]: Empreinte 'WEMOS_D1_mini_light' introuvable dans la librairie 'Module'.
+    Forçage local; warning
+    @(85,5750 mm, 21,5900 mm): Empreinte U1
+[lib_footprint_mismatch]: L’empreinte 'D_DO-41_SOD81_P10.16mm_Horizontal' ne correspond pas à la copie en librairie 'Diode_THT'.
+    Forçage local; warning
+    @(38,1000 mm, 33,0200 mm): Empreinte D1
+[lib_footprint_mismatch]: L’empreinte 'D_DO-41_SOD81_P10.16mm_Horizontal' ne correspond pas à la copie en librairie 'Diode_THT'.
+    Forçage local; warning
+    @(30,4800 mm, 45,7200 mm): Empreinte D2
+[lib_footprint_mismatch]: L’empreinte 'C_Disc_D8.0mm_W2.5mm_P5.00mm' ne correspond pas à la copie en librairie 'Capacitor_THT'.
+    Forçage local; warning
+    @(81,2800 mm, 40,7200 mm): Empreinte C1
+[track_dangling]: La piste a une extrémité non connectée
+    Forçage local; warning
+    @(49,5194 mm, 33,6650 mm): Piste [Net-(U1-MOSI/D7)] sur F.Cu, long. 0,7994 mm
 
 ** Found 0 unconnected pads **
 

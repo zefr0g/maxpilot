@@ -2445,6 +2445,36 @@
 	)
 	(wire
 		(pts
+			(xy 130.81 76.2) (xy 130.81 78.74)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1c1ac95d-ab3a-4030-8cbd-8c218c9370c5")
+	)
+	(wire
+		(pts
+			(xy 128.27 78.74) (xy 128.27 80.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "24097ea3-f389-4d48-8d67-0628872052d7")
+	)
+	(wire
+		(pts
+			(xy 130.81 78.74) (xy 128.27 78.74)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2dcfd8d8-617c-4285-ac38-482c7e9fb9db")
+	)
+	(wire
+		(pts
 			(xy 109.22 45.72) (xy 105.41 50.8)
 		)
 		(stroke
@@ -2452,6 +2482,16 @@
 			(type default)
 		)
 		(uuid "40c625b6-2ad6-4b0a-9eab-6a69294a2459")
+	)
+	(wire
+		(pts
+			(xy 128.27 36.83) (xy 125.73 36.83)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "43d0a9db-f236-4356-8978-02e3ab2e403d")
 	)
 	(wire
 		(pts
@@ -2475,7 +2515,7 @@
 	)
 	(wire
 		(pts
-			(xy 148.59 54.61) (xy 148.59 44.45)
+			(xy 148.59 53.34) (xy 148.59 44.45)
 		)
 		(stroke
 			(width 0)
@@ -2492,6 +2532,16 @@
 			(type default)
 		)
 		(uuid "8992f48a-b080-4c80-9223-b22f03014b2a")
+	)
+	(wire
+		(pts
+			(xy 128.27 35.56) (xy 128.27 36.83)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8a4228bd-fdff-419b-8d1b-39b187dc0db5")
 	)
 	(wire
 		(pts
@@ -2525,7 +2575,7 @@
 	)
 	(wire
 		(pts
-			(xy 138.43 54.61) (xy 148.59 54.61)
+			(xy 140.97 53.34) (xy 148.59 53.34)
 		)
 		(stroke
 			(width 0)
@@ -2555,7 +2605,7 @@
 	)
 	(wire
 		(pts
-			(xy 149.86 64.77) (xy 149.86 72.39)
+			(xy 149.86 63.5) (xy 149.86 72.39)
 		)
 		(stroke
 			(width 0)
@@ -2565,7 +2615,7 @@
 	)
 	(wire
 		(pts
-			(xy 138.43 64.77) (xy 149.86 64.77)
+			(xy 140.97 63.5) (xy 149.86 63.5)
 		)
 		(stroke
 			(width 0)
@@ -2817,7 +2867,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_DIP:DIP-6_W7.62mm"
+		(property "Footprint" "MaxPilot:MOC3041M_DIP6_W7.62mm_NC5"
 			(at 161.29 46.99 0)
 			(effects
 				(font
@@ -2968,7 +3018,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_DIP:DIP-6_W7.62mm"
+		(property "Footprint" "MaxPilot:MOC3041M_DIP6_W7.62mm_NC5"
 			(at 161.29 74.93 0)
 			(effects
 				(font
@@ -3043,7 +3093,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "LINE"
+		(property "Value" "LINE_P"
 			(at 177.8 44.4499 90)
 			(effects
 				(font
@@ -3174,7 +3224,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "LINE"
+		(property "Value" "LINE_P"
 			(at 85.09 45.72 0)
 			(effects
 				(font
@@ -3307,12 +3357,13 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "LINE"
-			(at 66.04 44.45 0)
+		(property "Value" "LINE_P"
+			(at 68.58 48.2599 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -3489,7 +3540,7 @@
 	)
 	(symbol
 		(lib_id "MCU_Module:WeMos_D1_mini")
-		(at 128.27 57.15 0)
+		(at 130.81 55.88 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -3498,7 +3549,7 @@
 		(fields_autoplaced yes)
 		(uuid "7e3b3cf8-4aae-4b66-854b-9074464bdcac")
 		(property "Reference" "U1"
-			(at 130.2894 77.47 0)
+			(at 132.8294 76.2 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3507,7 +3558,7 @@
 			)
 		)
 		(property "Value" "WeMos_D1_mini"
-			(at 130.2894 80.01 0)
+			(at 132.8294 78.74 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3516,7 +3567,7 @@
 			)
 		)
 		(property "Footprint" "Module:WEMOS_D1_mini_light"
-			(at 128.27 86.36 0)
+			(at 130.81 85.09 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3525,7 +3576,7 @@
 			)
 		)
 		(property "Datasheet" "https://wiki.wemos.cc/products:d1:d1_mini#documentation"
-			(at 81.28 86.36 0)
+			(at 83.82 85.09 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3534,7 +3585,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 128.27 57.15 0)
+			(at 130.81 55.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3815,7 +3866,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "LINE"
+		(property "Value" "LINE_P"
 			(at 78.74 38.354 0)
 			(effects
 				(font
@@ -3927,7 +3978,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 128.27 77.47 0)
+		(at 128.27 80.01 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -3936,7 +3987,7 @@
 		(fields_autoplaced yes)
 		(uuid "a6b54559-6902-4219-ac98-32bd0cb0f44d")
 		(property "Reference" "#PWR0111"
-			(at 128.27 83.82 0)
+			(at 128.27 86.36 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3945,7 +3996,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 128.27 82.55 0)
+			(at 128.27 85.09 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3953,7 +4004,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 128.27 77.47 0)
+			(at 128.27 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3962,7 +4013,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 128.27 77.47 0)
+			(at 128.27 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3971,7 +4022,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 128.27 77.47 0)
+			(at 128.27 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4075,7 +4126,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "LINE"
+		(property "Value" "LINE_P"
 			(at 177.292 70.104 0)
 			(effects
 				(font
@@ -4548,7 +4599,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "TerminalBlock:TerminalBlock_bornier-3_P5.08mm"
+		(property "Footprint" "MaxPilot:TerminalBlock_Generic_1x03_P7.62mm_Horizontal"
 			(at 54.61 66.04 0)
 			(effects
 				(font

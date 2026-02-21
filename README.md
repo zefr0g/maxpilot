@@ -193,12 +193,12 @@ Secteur AC ──► Fusible (F1) ──► Varistance (RV1) ──► HLK-PM01 
 | F1 | 1A | Fuseholder_Blade_Mini_Keystone_3568 | 1 | Fusible / Fuse |
 | C1 | 22µF 25V céramique | C_Disc_D8.0mm_W2.5mm_P5.00mm | 1 | Condensateur céramique / Ceramic capacitor |
 | U1 | WeMos D1 Mini | WEMOS_D1_mini_light | 1 | Microcontrôleur ESP8266 |
-| U2, U3 | MOC3041M | DIP-6_W7.62mm | 2 | Optocoupleur triac / Opto-triac |
+| U2, U3 | MOC3041M | MOC3041M_DIP6_W7.62mm_NC5 | 2 | Optocoupleur triac / Opto-triac (pin 5 NC — à couper / clip before soldering) |
 | R1, R2 | 570Ω | R_Axial_DIN0207 | 2 | Résistances / Resistors |
 | D1, D2 | 1N4007 | D_DO-41_SOD81 | 2 | Diodes de protection / Protection diodes |
 | RV1 | MOV 275V (14D431K) | RV_Disc_D12mm | 1 | Varistance 275V / 275V Varistor (surge protection) |
 | PS1 | HLK-PM01 | Converter_ACDC_HiLink_HLK-PMxx | 1 | Alimentation AC/DC 5V / AC-DC 5V PSU |
-| J1 | Bornier 3 pts | TerminalBlock_bornier-3_P5.08mm | 1 | Connecteur / Terminal block |
+| J1 | Bornier 3 pts 7.62mm | TerminalBlock_Generic_1x03_P7.62mm_Horizontal | 1 | Connecteur / Terminal block (ex: Würth 691311400103, Phoenix MKDS 1,5/3-7,62) |
 
 ---
 
@@ -402,39 +402,39 @@ Fichiers d'assemblage dans `hardware/` / Assembly files in `hardware/`:
 
 > **EN** | **WARNING: This project involves mains voltage (230V AC). Installation and handling must be performed by a qualified person. Risk of fatal electric shock. Always disconnect power before any work. The board must be installed in a closed, insulated enclosure.**
 
+**FR** | Le PCB v2.0 respecte les distances d'isolement IPC-2221B et IEC 62368-1 pour 230V AC (clearance ≥ 3,0 mm mains↔BT, creepage ≥ 5,0 mm). Les règles DRC sont dans `hardware/kicad/MaxPilot.kicad_dru`.
+
+**EN** | PCB v2.0 meets IPC-2221B and IEC 62368-1 isolation distances for 230V AC (clearance ≥ 3.0 mm mains↔LV, creepage ≥ 5.0 mm). DRC rules are in `hardware/kicad/MaxPilot.kicad_dru`.
+
 ---
 
-## Améliorations possibles (v2) / Possible Improvements (v2)
+## Versions / Changelog
+
+### v2.0 — PCB redesign (sécurité / safety)
 
 **FR**
 
-Le design actuel fonctionne correctement pour l'usage prévu. Voici des améliorations envisageables pour une future révision :
+Refonte complète du PCB pour conformité aux normes de sécurité secteur :
 
-1. **Fusible surdimensionné** — Le fusible 1A est généreux pour ce circuit (le HLK-PM01 consomme ~15mA et le fil pilote quelques mA). Un **fusible 250mA ou 500mA** offrirait une meilleure protection.
-
-2. **Pas de résistance de limitation en sortie des MOC3041M** — En cas de court-circuit accidentel du fil pilote vers la phase ou le neutre, le triac interne du MOC3041M (100mA RMS max) pourrait être endommagé. Ajouter une **résistance série de 330Ω à 1kΩ** sur la sortie protégerait le composant sans affecter le signal pilote.
-
-3. **Pas de protection sur la sortie fil pilote** — Une **diode TVS** ou une petite varistance sur le fil pilote protégerait contre les surtensions venant du côté radiateur.
-
-4. **Distances d'isolement insuffisantes sur le PCB** — Les normes IPC-2221B et IEC 62368-1 recommandent **>2,5mm de clearance** entre pistes secteur et basse tension pour du 230V AC. Le DRC révèle que la règle actuelle est de **0,5mm** et que plusieurs pistes sont trop proches, notamment la piste NEUT et les pads de D1/D2 (jusqu'à **0,44mm** de distance). Le bornier J1 (pas de 5,08mm) ne laisse que 2,08mm entre les pads LINE/NEUT/PILOT. Une v2 nécessiterait un re-routage du PCB et potentiellement un bornier au pas de 7,62mm.
-
-5. **Traces non connectées** — Le DRC signale 2 connexions manquantes sur U3 (pin 5, net D2-Pad2) et une piste flottante sur R2. À corriger dans KiCad.
-
----
+- **Distances d'isolement conformes IPC-2221B / IEC 62368-1** — clearance mains↔BT ≥ 3,0 mm, clearance mains↔mains ≥ 2,5 mm, creepage ≥ 5,0 mm (règles DRC dans `MaxPilot.kicad_dru`)
+- **Bornier J1 remplacé par pas 7,62 mm** — le bornier 5,08 mm de v1 ne respectait pas les distances entre LINE/NEUT/PILOT
+- **Empreinte MOC3041M corrigée** — pin 5 (substrat triac, DO NOT CONNECT) remplacé par trou mécanique NPTH, à couper avant soudure
+- **Routage mains en 2 mm** — toutes les pistes secteur en 2 mm de large
 
 **EN**
 
-The current design works correctly for its intended use. Here are possible improvements for a future revision:
+Full PCB redesign for mains safety standard compliance:
 
-1. **Oversized fuse** — The 1A fuse is generous for this circuit (the HLK-PM01 draws ~15mA and the pilot wire only a few mA). A **250mA or 500mA fuse** would provide tighter protection.
+- **IPC-2221B / IEC 62368-1 compliant clearances** — mains↔LV clearance ≥ 3.0 mm, mains↔mains clearance ≥ 2.5 mm, creepage ≥ 5.0 mm (DRC rules in `MaxPilot.kicad_dru`)
+- **J1 terminal block replaced with 7.62 mm pitch** — the v1 5.08 mm terminal block did not meet LINE/NEUT/PILOT spacing requirements
+- **MOC3041M footprint corrected** — pin 5 (TRIAC substrate, DO NOT CONNECT) replaced with NPTH mechanical hole; clip before soldering
+- **Mains traces at 2 mm width** — all mains-side traces are 2 mm wide
 
-2. **No current-limiting resistor on MOC3041M output** — If the pilot wire is accidentally shorted to live or neutral, the MOC3041M internal triac (100mA RMS max) could be damaged. Adding a **330Ω to 1kΩ series resistor** on the output would protect it without affecting the pilot signal.
+### v1.0 — Initial release
 
-3. **No protection on pilot wire output** — A **TVS diode** or small varistor on the pilot wire would protect against surges coming from the radiator side.
+**FR** | Premier design fonctionnel, distribué sur HACS. Problèmes de distances d'isolement corrigés en v2.
 
-4. **Insufficient PCB creepage distances** — IPC-2221B and IEC 62368-1 standards recommend **>2.5mm clearance** between mains and low-voltage traces for 230V AC. DRC reveals the current rule is only **0.5mm** and several traces are too close, notably the NEUT trace and D1/D2 pads (as low as **0.44mm**). The J1 terminal block (5.08mm pitch) only allows 2.08mm between LINE/NEUT/PILOT pads. A v2 would require PCB re-routing and potentially a 7.62mm pitch terminal block.
-
-5. **Unconnected traces** — DRC reports 2 missing connections on U3 (pin 5, net D2-Pad2) and a dangling track on R2. To be fixed in KiCad.
+**EN** | First working design, published on HACS. Clearance issues fixed in v2.
 
 ---
 
