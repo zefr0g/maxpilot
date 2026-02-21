@@ -4,6 +4,11 @@
 	(generator_version "9.0")
 	(uuid "e63e39d7-6ac0-4ffd-8aa3-1841a4541b55")
 	(paper "A4")
+	(title_block
+		(title "MaxPilot")
+		(rev "2.0")
+		(comment 1 "CERN Open Hardware Licence Version 2 ")
+	)
 	(lib_symbols
 		(symbol "Connector_Generic:Conn_01x03"
 			(pin_names
@@ -2473,16 +2478,7 @@
 		)
 		(uuid "2dcfd8d8-617c-4285-ac38-482c7e9fb9db")
 	)
-	(wire
-		(pts
-			(xy 109.22 45.72) (xy 105.41 50.8)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "40c625b6-2ad6-4b0a-9eab-6a69294a2459")
-	)
+
 	(wire
 		(pts
 			(xy 128.27 36.83) (xy 125.73 36.83)
@@ -2555,6 +2551,16 @@
 	)
 	(wire
 		(pts
+			(xy 50.8 66.04) (xy 49.53 66.04)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "95871218-61df-4233-a191-576febb2bbca")
+	)
+	(wire
+		(pts
 			(xy 189.23 39.37) (xy 189.23 53.34)
 		)
 		(stroke
@@ -2582,6 +2588,16 @@
 			(type default)
 		)
 		(uuid "ab64df0e-4765-42f3-86aa-43bd1337b943")
+	)
+	(wire
+		(pts
+			(xy 50.8 63.5) (xy 49.53 63.5)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c66479a9-9b9e-42ac-8a1d-1c40f3448355")
 	)
 	(wire
 		(pts
@@ -2633,16 +2649,7 @@
 		)
 		(uuid "d9d05d37-510e-40c0-8659-702cf0e91f1a")
 	)
-	(wire
-		(pts
-			(xy 105.41 50.8) (xy 113.03 48.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "dc156e72-c81c-47f8-b33b-4d86c62d63c5")
-	)
+
 	(wire
 		(pts
 			(xy 173.99 39.37) (xy 181.61 39.37)
@@ -2675,13 +2682,89 @@
 	)
 	(wire
 		(pts
-			(xy 40.64 68.58) (xy 49.53 68.58)
+			(xy 40.64 68.58) (xy 50.8 68.58)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "fd66206b-dc7b-4405-bc3d-e7f565cd6fda")
+	)
+	(wire
+		(pts
+			(xy 105.41 45.72) (xy 105.41 50.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e53a6a7e-a292-42b0-9564-09d4b307c5cc")
+	)
+	(wire
+		(pts
+			(xy 105.41 48.26) (xy 113.03 48.26)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c7b24997-40aa-4383-8782-c960930ef068")
+	)
+	(junction
+		(at 105.41 48.26)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "2670a987-c5f6-4b89-8185-dc90e8a391e7")
+	)
+	(text "Entrée AC"
+		(at 60 35 0)
+		(effects
+			(font
+				(size 1.5 1.5)
+				(bold yes)
+			)
+		)
+		(uuid "4396ad1c-8b1b-41aa-9adc-278f6e686beb")
+	)
+	(text "Alim. 5V DC"
+		(at 92 43 0)
+		(effects
+			(font
+				(size 1.5 1.5)
+				(bold yes)
+			)
+		)
+		(uuid "56227f1e-16a0-4a29-83db-c314aef3cfb7")
+	)
+	(text "MCU"
+		(at 133 43 0)
+		(effects
+			(font
+				(size 1.5 1.5)
+				(bold yes)
+			)
+		)
+		(uuid "d24b535c-4772-4f41-a83f-6dc0e7a4955a")
+	)
+	(text "Canal 1 (SSR1)"
+		(at 159 30 0)
+		(effects
+			(font
+				(size 1.5 1.5)
+				(bold yes)
+			)
+		)
+		(uuid "86148d9f-e8c5-41e0-95ad-cb1ed374dc3b")
+	)
+	(text "Canal 2 (SSR2)"
+		(at 159 58 0)
+		(effects
+			(font
+				(size 1.5 1.5)
+				(bold yes)
+			)
+		)
+		(uuid "b75b7967-90ce-425a-b0a0-0eccae3fc2fa")
 	)
 	(label "PILOT"
 		(at 40.64 68.58 0)
@@ -4375,7 +4458,7 @@
 	)
 	(symbol
 		(lib_id "power:+5V")
-		(at 109.22 45.72 270)
+		(at 105.41 45.72 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -4384,7 +4467,7 @@
 		(fields_autoplaced yes)
 		(uuid "c7ea397a-99e6-410a-91b7-7ea15f556617")
 		(property "Reference" "#PWR0108"
-			(at 105.41 45.72 0)
+			(at 105.41 49.53 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4393,16 +4476,15 @@
 			)
 		)
 		(property "Value" "+5V"
-			(at 113.03 45.7199 90)
+			(at 105.41 40.64 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
 			)
 		)
 		(property "Footprint" ""
-			(at 109.22 45.72 0)
+			(at 105.41 45.72 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4411,7 +4493,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 109.22 45.72 0)
+			(at 105.41 45.72 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4420,7 +4502,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 109.22 45.72 0)
+			(at 105.41 45.72 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4573,7 +4655,7 @@
 	)
 	(symbol
 		(lib_id "Connector_Generic:Conn_01x03")
-		(at 54.61 66.04 0)
+		(at 55.88 66.04 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -4582,7 +4664,7 @@
 		(fields_autoplaced yes)
 		(uuid "eed5fd95-a7ce-441e-bbe1-d330431c5e6d")
 		(property "Reference" "J1"
-			(at 57.15 64.7699 0)
+			(at 58.42 64.7699 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4591,7 +4673,7 @@
 			)
 		)
 		(property "Value" "Conn_01x03"
-			(at 57.15 67.3099 0)
+			(at 58.42 67.3099 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4600,7 +4682,7 @@
 			)
 		)
 		(property "Footprint" "MaxPilot:TerminalBlock_Generic_1x03_P7.62mm_Horizontal"
-			(at 54.61 66.04 0)
+			(at 55.88 66.04 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4609,7 +4691,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 54.61 66.04 0)
+			(at 55.88 66.04 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4618,7 +4700,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 54.61 66.04 0)
+			(at 55.88 66.04 0)
 			(effects
 				(font
 					(size 1.27 1.27)
