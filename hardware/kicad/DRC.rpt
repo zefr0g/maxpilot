@@ -1,13 +1,13 @@
 ** Drc report for MaxPilot.kicad_pcb **
-** Created on 2026-02-21T17:32:58+0100 **
+** Created on 2026-02-21T18:42:17+0100 **
 
-** Found 10 DRC violations **
+** Found 9 DRC violations **
 [lib_footprint_mismatch]: L’empreinte 'R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal' ne correspond pas à la copie en librairie 'Resistor_THT'.
     Forçage local; warning
     @(76,2000 mm, 15,2400 mm): Empreinte R2
 [lib_footprint_mismatch]: L’empreinte 'MOC3041M_DIP6_W7.62mm_NC5' ne correspond pas à la copie en librairie 'MaxPilot'.
     Forçage local; warning
-    @(43,1800 mm, 25,4000 mm): Empreinte U3
+    @(45,7200 mm, 25,4000 mm): Empreinte U3
 [lib_footprint_mismatch]: L’empreinte 'R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal' ne correspond pas à la copie en librairie 'Resistor_THT'.
     Forçage local; warning
     @(76,2000 mm, 20,3200 mm): Empreinte R1
@@ -16,10 +16,10 @@
     @(45,7200 mm, 36,9050 mm): Empreinte PS1
 [lib_footprint_mismatch]: L’empreinte 'MOC3041M_DIP6_W7.62mm_NC5' ne correspond pas à la copie en librairie 'MaxPilot'.
     Forçage local; warning
-    @(55,8800 mm, 22,8600 mm): Empreinte U2
+    @(59,6850 mm, 22,8600 mm): Empreinte U2
 [lib_footprint_issues]: Empreinte 'WEMOS_D1_mini_light' introuvable dans la librairie 'Module'.
     Forçage local; warning
-    @(85,5750 mm, 21,5900 mm): Empreinte U1
+    @(81,2800 mm, 21,5900 mm): Empreinte U1
 [lib_footprint_mismatch]: L’empreinte 'D_DO-41_SOD81_P10.16mm_Horizontal' ne correspond pas à la copie en librairie 'Diode_THT'.
     Forçage local; warning
     @(38,1000 mm, 33,0200 mm): Empreinte D1
@@ -28,10 +28,7 @@
     @(30,4800 mm, 45,7200 mm): Empreinte D2
 [lib_footprint_mismatch]: L’empreinte 'C_Disc_D8.0mm_W2.5mm_P5.00mm' ne correspond pas à la copie en librairie 'Capacitor_THT'.
     Forçage local; warning
-    @(81,2800 mm, 40,7200 mm): Empreinte C1
-[track_dangling]: La piste a une extrémité non connectée
-    Forçage local; warning
-    @(49,5194 mm, 33,6650 mm): Piste [Net-(U1-MOSI/D7)] sur F.Cu, long. 0,7994 mm
+    @(71,2000 mm, 25,4000 mm): Empreinte C1
 
 ** Found 0 unconnected pads **
 
