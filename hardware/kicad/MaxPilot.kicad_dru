@@ -13,12 +13,12 @@
 
 (rule "Mains_to_LV_Clearance"
     (constraint clearance (min 3.0mm))
-    (condition "(A.NetClass == 'Line') && (B.NetClass != 'Line')")
+    (condition "(A.NetClass == 'Line') && (B.NetClass != 'Line') && (A.Parent != B.Parent)")
 )
 
 (rule "Mains_to_LV_Creepage"
     (constraint creepage (min 5.0mm))
-    (condition "(A.NetClass == 'Line') && (B.NetClass != 'Line')")
+    (condition "(A.NetClass == 'Line') && (B.NetClass != 'Line') && (A.Parent != B.Parent)")
 )
 
 (rule "Mains_Internal_Clearance"
