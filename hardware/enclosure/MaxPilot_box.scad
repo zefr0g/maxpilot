@@ -44,6 +44,15 @@ boss_h   = standoff;
 screw_d  = 1.8;  // self-tapping M2 blind hole in boss
 floor_d  = 2.3;  // M2 clearance hole through base floor
 
+// ── Lid screws (M3 corner ear tabs) ──────────────────────────
+ear_r      = 5.0;   // ear boss radius
+ear_out    = 3.0;   // ear centre offset beyond corner (along diagonal)
+scr_clr    = 3.3;   // M3 clearance hole diameter (lid)
+scr_pilot  = 2.5;   // M3 self-tapping pilot diameter (base)
+scr_depth  = 10.0;  // pilot hole depth
+scr_cbore  = 6.5;   // M3 pan head counterbore diameter
+scr_cbore_h = 2.0;  // counterbore depth
+
 // ── J1 terminal block cutout ─────────────────────────────────
 // J1 KiCad (17.78, 25.4) rot=-90° → PCB-rel (5.08, 12.7)
 // Pins at PCB-Y: 12.7, 20.32, 27.94 — centre 20.32
@@ -80,34 +89,65 @@ module rounded_rect(l, w, h, r) {
                 cylinder(r=r, h=h);
 }
 
+// Corner cylinder centres (box world XY)
+function sp(i) = [[corner_r,       corner_r      ],
+                  [ext_l-corner_r, corner_r      ],
+                  [corner_r,       ext_w-corner_r],
+                  [ext_l-corner_r, ext_w-corner_r]][i];
+
+// Ear tab centres — offset outward along corner diagonal
+ear_ofs = ear_out / sqrt(2);
+function ep(i) = [[corner_r - ear_ofs,      corner_r - ear_ofs     ],
+                  [ext_l-corner_r+ear_ofs,  corner_r - ear_ofs     ],
+                  [corner_r - ear_ofs,      ext_w-corner_r+ear_ofs ],
+                  [ext_l-corner_r+ear_ofs,  ext_w-corner_r+ear_ofs ]][i];
+
 // ── Base ──────────────────────────────────────────────────────
 module base() {
-    union() {
-        // Hollow shell (outer rounded box minus interior cavity and J1 cutout)
-        difference() {
-            rounded_rect(ext_l, ext_w, base_h, corner_r);
+    difference() {
+        union() {
+            // Hollow shell (outer rounded box minus interior cavity and J1 cutout)
+            difference() {
+                rounded_rect(ext_l, ext_w, base_h, corner_r);
 
-            // Interior cavity
-            translate([wall, wall, floor_t])
-                cube([int_l, int_w, int_h + 0.01]);
+                // Interior cavity
+                translate([wall, wall, floor_t])
+                    cube([int_l, int_w, int_h + 0.01]);
 
-            // J1 wire entry cutout (left wall)
-            translate([-0.01,
-                       j1_world_cy - j1_cw/2,
-                       floor_t + j1_cz0])
-                cube([wall + 0.02, j1_cw, j1_ch]);
+                // J1 wire entry cutout (left wall)
+                translate([-0.01,
+                           j1_world_cy - j1_cw/2,
+                           floor_t + j1_cz0])
+                    cube([wall + 0.02, j1_cw, j1_ch]);
+            }
+
+            // PCB standoff bosses
+            for (i = [0:3])
+                difference() {
+                    translate([bp(i)[0], bp(i)[1], floor_t])
+                        cylinder(d=boss_d, h=boss_h);
+
+                    // M2 blind hole in boss top (self-tapping, 4 mm deep)
+                    translate([bp(i)[0], bp(i)[1], floor_t + boss_h - 4.0])
+                        cylinder(d=screw_d, h=4.1);
+                }
+
+            // Corner ear tabs (external bosses for lid screws)
+            for (i = [0:3])
+                hull() {
+                    translate([sp(i)[0], sp(i)[1], 0]) cylinder(r=corner_r, h=base_h);
+                    translate([ep(i)[0], ep(i)[1], 0]) cylinder(r=ear_r,    h=base_h);
+                }
         }
 
-        // PCB standoff bosses (added after interior subtraction so they survive)
-        for (i = [0:3])
-            difference() {
-                translate([bp(i)[0], bp(i)[1], floor_t])
-                    cylinder(d=boss_d, h=boss_h);
+        // Re-subtract interior so ear hulls don't intrude into box cavity
+        translate([wall, wall, floor_t])
+            cube([int_l, int_w, int_h + 0.01]);
 
-                // M2 blind hole in boss top (self-tapping, 4 mm deep)
-                translate([bp(i)[0], bp(i)[1], floor_t + boss_h - 4.0])
-                    cylinder(d=screw_d, h=4.1);
-            }
+        // M3 pilot holes in ear tabs (self-tapping, from top)
+        for (i = [0:3])
+            translate([ep(i)[0], ep(i)[1], base_h - scr_depth])
+                cylinder(d=scr_pilot, h=scr_depth + 0.01);
     }
 }
 
@@ -116,21 +156,38 @@ module lid() {
     lip_ol = int_l - 2*lip_clr;
     lip_ow = int_w - 2*lip_clr;
 
-    union() {
-        // Lid plate
-        rounded_rect(ext_l, ext_w, lid_t, corner_r);
+    difference() {
+        union() {
+            // Lid plate
+            rounded_rect(ext_l, ext_w, lid_t, corner_r);
 
-        // Friction-fit lip (hangs into base interior when installed)
-        translate([(ext_l - lip_ol) / 2,
-                   (ext_w - lip_ow) / 2,
-                   -lip_h])
-            difference() {
-                cube([lip_ol, lip_ow, lip_h]);
-                translate([lip_t, lip_t, -0.01])
-                    cube([lip_ol - 2*lip_t,
-                          lip_ow - 2*lip_t,
-                          lip_h + 0.02]);
-            }
+            // Friction-fit lip (hangs into base interior when installed)
+            translate([(ext_l - lip_ol) / 2,
+                       (ext_w - lip_ow) / 2,
+                       -lip_h])
+                difference() {
+                    cube([lip_ol, lip_ow, lip_h]);
+                    translate([lip_t, lip_t, -0.01])
+                        cube([lip_ol - 2*lip_t,
+                              lip_ow - 2*lip_t,
+                              lip_h + 0.02]);
+                }
+
+            // Corner ear extensions (matching base, lid_t thick)
+            for (i = [0:3])
+                hull() {
+                    translate([sp(i)[0], sp(i)[1], 0]) cylinder(r=corner_r, h=lid_t);
+                    translate([ep(i)[0], ep(i)[1], 0]) cylinder(r=ear_r,    h=lid_t);
+                }
+        }
+
+        // M3 clearance holes + counterbore on outer face
+        for (i = [0:3]) {
+            translate([ep(i)[0], ep(i)[1], -0.01])
+                cylinder(d=scr_clr, h=lid_t + 0.02);
+            translate([ep(i)[0], ep(i)[1], lid_t - scr_cbore_h])
+                cylinder(d=scr_cbore, h=scr_cbore_h + 0.01);
+        }
     }
 }
 
