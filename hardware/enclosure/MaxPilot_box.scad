@@ -143,8 +143,12 @@ if (part == "base" || part == "both")
 
 if (part == "lid" || part == "both")
     color("LightSteelBlue", 0.7)
-        translate([0, 0, (part == "both") ? base_h + 8 : 0])
-            lid();
+        if (part == "both")
+            // Preview: lid floated above base, design orientation
+            translate([0, 0, base_h + 8]) lid();
+        else
+            // Print orientation: outer face on build plate (z=0), lip points up
+            translate([0, ext_w, lid_t]) rotate([180, 0, 0]) lid();
 
 // ── Dimensions (echo) ─────────────────────────────────────────
 echo(str("Box exterior: ", ext_l, " × ", ext_w, " × ", base_h + lid_t, " mm"));
