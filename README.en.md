@@ -1,10 +1,14 @@
 # MaxPilot
 
+[![License](https://img.shields.io/badge/License-CERN--OHL--S--2.0-blue)](LICENSE) [![ESPHome](https://img.shields.io/badge/ESPHome-compatible-brightgreen)](https://esphome.io/) [![KiCad 9](https://img.shields.io/badge/KiCad-9-blue)](https://www.kicad.org/) [![Home Assistant](https://img.shields.io/badge/Home%20Assistant-compatible-41BDF5)](https://www.home-assistant.io/)
+
+> WiFi control for French electric radiators via Home Assistant — under €15.
+
 [Version française → README.md](README.md)
 
 ![MaxPilot - Assembled board photo](images/photo.jpg)
 
-MaxPilot is an open-source board that lets you **control your electric radiators from your phone or computer**, via Home Assistant. It connects to your radiators' "fil pilote" (pilot wire) and sets the heating mode (Comfort, Eco, Frost protection, Off) over WiFi. No more wall-mounted programmer: manage everything from your smart home. Built around **low-cost, widely available components** (WeMos D1 Mini ~€3, optocouplers, MOSFETs), it is accessible to any electronics hobbyist.
+MaxPilot is an open-source board that lets you **control your electric radiators from your phone or computer**, via Home Assistant. It connects to your radiators' "fil pilote" (pilot wire) and sets the heating mode (Comfort, Eco, Frost protection, Off) over WiFi. No more wall-mounted programmer — manage everything from your smart home. Built around **low-cost, widely available components** (WeMos D1 Mini ~€3, optocouplers), it is accessible to any electronics hobbyist.
 
 ---
 
@@ -12,7 +16,6 @@ MaxPilot is an open-source board that lets you **control your electric radiators
 
 - [What is "Fil Pilote"?](#what-is-fil-pilote)
 - [Features](#features)
-- [Climate Control](#4-climate-control-optional)
 - [Quick Start](#quick-start)
 - [Wiring](#wiring)
 - [Schematic](#schematic)
@@ -20,6 +23,7 @@ MaxPilot is an open-source board that lets you **control your electric radiators
 - [ESPHome Configuration](#esphome-configuration)
 - [Home Assistant Integration](#home-assistant-integration)
 - [PCB Manufacturing](#pcb-manufacturing)
+- [Enclosure](#enclosure)
 - [Safety](#safety)
 - [License](#license)
 
@@ -68,10 +72,11 @@ MaxPilot uses **two MOC3041M optocouplers** per channel, with **1N4007 diodes**,
 - ESP8266 microcontroller (WeMos D1 Mini) with built-in WiFi
 - Compatible with ESPHome and Home Assistant
 - Isolated AC/DC power supply (HLK-PM01, 5V)
-- Surge protection (varistor)
+- Surge protection (275V MOV varistor)
 - Zero-cross optocouplers (MOC3041M) for clean switching
 - 1A fuse protection
 - Built-in thermostat with external temperature sensor (optional)
+- 3D-printable enclosure included
 
 ---
 
@@ -88,7 +93,7 @@ MaxPilot uses **two MOC3041M optocouplers** per channel, with **1N4007 diodes**,
 
 ## Wiring
 
-> **WARNING**: Switch off the circuit breaker before any wiring!
+> ⚠️ **WARNING**: Switch off the circuit breaker before any wiring!
 
 The board connects via the 3-pin terminal block (J1). The pilot wire on your radiator is the black (or sometimes grey) wire in your radiator's electrical conduit.
 
@@ -98,14 +103,13 @@ The board connects via the 3-pin terminal block (J1). The pilot wire on your rad
                    │  L  │  N  │  P  │
                    └──┬──┴──┬──┴──┬──┘
                       │     │     │
-                      │     │     └──── Fil pilote vers radiateur
-                      │     │           Pilot wire to radiator
+                      │     │     └──── Pilot wire to radiator
                       │     │
-                      │     └────────── Neutre / Neutral (bleu/blue)
+                      │     └────────── Neutral (blue)
                       │
-                      └──────────────── Phase / Live (marron ou rouge / brown or red)
+                      └──────────────── Live (brown or red)
 
-          Depuis le tableau électrique / From the electrical panel
+          From the electrical panel
 ```
 
 ---
@@ -119,21 +123,19 @@ The full schematic is in `hardware/kicad/MaxPilot.kicad_sch` (KiCad 9).
 ### Architecture
 
 ```
-Secteur AC ──► Fusible (F1) ──► Varistance (RV1) ──► HLK-PM01 (PS1) ──► 5V DC
-                                                            │
-                                                     WeMos D1 Mini (U1)
-                                                      │           │
-                                                  GPIO D3      GPIO D7
-                                                      │           │
-                                                  R1 (570Ω)   R2 (570Ω)
-                                                      │           │
-                                                  MOC3041M     MOC3041M
-                                                   (U2)         (U3)
-                                                      │           │
-                                                  D1 (1N4007) D2 (1N4007)
-                                                      │           │
-                                                  Canal 1      Canal 2
-                                                 Channel 1    Channel 2
+Mains AC ──► F1 (1A fuse) ──► RV1 (varistor) ──► PS1 (HLK-PM01) ──► 5V DC
+                                                         │
+                                                  U1 (WeMos D1 Mini)
+                                                   │            │
+                                               GPIO D3       GPIO D7
+                                                   │            │
+                                               R1 (570Ω)    R2 (570Ω)
+                                                   │            │
+                                               U2 (MOC3041M) U3 (MOC3041M)
+                                                   │            │
+                                               D1 (1N4007)  D2 (1N4007)
+                                                   │            │
+                                                Channel 1    Channel 2
 ```
 
 ### Pin Mapping
@@ -147,17 +149,17 @@ Secteur AC ──► Fusible (F1) ──► Varistance (RV1) ──► HLK-PM01 
 
 ## Bill of Materials
 
-| Ref | Value | Footprint | Qty | Description |
-|-----|-------|-----------|-----|-------------|
-| F1 | 1A | Fuseholder_Blade_Mini_Keystone_3568 | 1 | Fuse |
-| C1 | 22µF 25V ceramic | C_Disc_D8.0mm_W2.5mm_P5.00mm | 1 | Ceramic capacitor |
-| U1 | WeMos D1 Mini | WEMOS_D1_mini_light | 1 | ESP8266 microcontroller |
-| U2, U3 | MOC3041M | MOC3041M_DIP6_W7.62mm_NC5 | 2 | Opto-triac (pin 5 NC — clip before soldering) |
-| R1, R2 | 570Ω | R_Axial_DIN0207 | 2 | Resistors |
-| D1, D2 | 1N4007 | D_DO-41_SOD81 | 2 | Protection diodes |
-| RV1 | MOV 275V (14D431K) | RV_Disc_D12mm | 1 | 275V Varistor (surge protection) |
-| PS1 | HLK-PM01 | Converter_ACDC_HiLink_HLK-PMxx | 1 | AC-DC 5V power supply |
-| J1 | 3-pin terminal block 7.62mm | TerminalBlock_Generic_1x03_P7.62mm_Horizontal | 1 | Terminal block (e.g. Würth 691311400103, Phoenix MKDS 1,5/3-7,62) |
+| Ref | Qty | Value | Description |
+|-----|:---:|-------|-------------|
+| F1 | 1 | 1A | Mini blade fuse (Keystone 3568) |
+| C1 | 1 | 22µF 25V | Ceramic capacitor |
+| U1 | 1 | WeMos D1 Mini | ESP8266 microcontroller |
+| U2, U3 | 2 | MOC3041M | Opto-triac — clip pin 5 before soldering |
+| R1, R2 | 2 | 570Ω | Axial resistors |
+| D1, D2 | 2 | 1N4007 | Protection diodes |
+| RV1 | 1 | MOV 275V | Varistor 14D431K (surge protection) |
+| PS1 | 1 | HLK-PM01 | Isolated AC-DC 5V power supply |
+| J1 | 1 | 3-pin 7.62mm | Terminal block — e.g. Würth 691311400103, Phoenix MKDS 1,5/3-7,62 |
 
 ---
 
@@ -261,27 +263,31 @@ automation:
 
 ## PCB Manufacturing
 
-Gerber files ready for JLCPCB, PCBWay, etc.
+Gerber files ready for JLCPCB, PCBWay, etc. — in `hardware/gerber/`.
 
 | Front | Back |
 |:--:|:--:|
 | ![PCB Front](images/MaxPilot-pcb-front.svg) | ![PCB Back](images/MaxPilot-pcb-back.svg) |
 
-Files in `hardware/gerber/`:
-- `MaxPilot-F_Cu.gtl` / `MaxPilot-B_Cu.gbl`
-- `MaxPilot-F_Mask.gts` / `MaxPilot-B_Mask.gbs`
-- `MaxPilot-F_Silkscreen.gto` / `MaxPilot-B_Silkscreen.gbo`
-- `MaxPilot-Edge_Cuts.gm1`
-- `MaxPilot.drl` — drill file (unified PTH+NPTH)
-- `MaxPilot-job.gbrjob`
+---
+
+## Enclosure
+
+A 3D-printable enclosure is included in `hardware/enclosure/`. Print without supports in PLA, open face up.
+
+- **PCB screws**: 4× M2×6 (into bottom standoffs)
+- **Lid screws**: 4× M3×13 (self-tapping into corner pillars)
 
 ---
 
 ## Safety
 
-> **WARNING: This project involves mains voltage (230V AC). Risk of fatal electrocution. Always switch off the power before any work. The board must be installed in a closed enclosure.**
+> ⚠️ **WARNING: This project involves mains voltage (230V AC). Risk of fatal electrocution.**
+> Always switch off the power before any work. The board must be installed in a closed enclosure.
 
-PCB v2.0 meets IPC-2221B and IEC 62368-1 creepage and clearance requirements (clearance ≥ 3.0 mm mains↔LV, creepage ≥ 5.0 mm).
+PCB v2.0 meets IPC-2221B and IEC 62368-1 isolation requirements:
+- Mains ↔ low-voltage clearance: ≥ 3.0 mm
+- Creepage distance: ≥ 5.0 mm
 
 ---
 

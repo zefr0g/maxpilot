@@ -1,10 +1,14 @@
 # MaxPilot
 
+[![Licence](https://img.shields.io/badge/Licence-CERN--OHL--S--2.0-blue)](LICENSE) [![ESPHome](https://img.shields.io/badge/ESPHome-compatible-brightgreen)](https://esphome.io/) [![KiCad 9](https://img.shields.io/badge/KiCad-9-blue)](https://www.kicad.org/) [![Home Assistant](https://img.shields.io/badge/Home%20Assistant-compatible-41BDF5)](https://www.home-assistant.io/)
+
+> Pilotez vos radiateurs électriques en WiFi depuis Home Assistant — pour moins de 15 €.
+
 [English version → README.en.md](README.en.md)
 
 ![MaxPilot - Photo de la carte assemblée](images/photo.jpg)
 
-MaxPilot est une carte open-source qui permet de **contrôler vos radiateurs électriques depuis votre téléphone ou votre ordinateur**, via Home Assistant. Elle se branche sur le fil pilote de vos radiateurs et commande le mode de chauffage (Confort, Éco, Hors-gel, Arrêt) en WiFi. Plus besoin de programmateur mural : vous gérez tout depuis votre domotique. Conçue autour de composants **peu coûteux et facilement disponibles** (WeMos D1 Mini ~3 €, optocoupleurs, MOSFETs), elle est accessible à tout amateur d'électronique.
+MaxPilot est une carte open-source qui permet de **contrôler vos radiateurs électriques depuis votre téléphone ou votre ordinateur**, via Home Assistant. Elle se branche sur le fil pilote de vos radiateurs et commande le mode de chauffage (Confort, Éco, Hors-gel, Arrêt) en WiFi. Plus besoin de programmateur mural : vous gérez tout depuis votre domotique. Conçue autour de composants **peu coûteux et facilement disponibles** (WeMos D1 Mini ~3 €, optocoupleurs), elle est accessible à tout amateur d'électronique.
 
 ---
 
@@ -12,7 +16,6 @@ MaxPilot est une carte open-source qui permet de **contrôler vos radiateurs él
 
 - [C'est quoi le fil pilote ?](#cest-quoi-le-fil-pilote-)
 - [Fonctionnalités](#fonctionnalités)
-- [Contrôle climatique](#4-contrôle-climatique-optionnel)
 - [Démarrage rapide](#démarrage-rapide)
 - [Câblage](#câblage)
 - [Schéma](#schéma)
@@ -20,6 +23,7 @@ MaxPilot est une carte open-source qui permet de **contrôler vos radiateurs él
 - [Configuration ESPHome](#configuration-esphome)
 - [Intégration Home Assistant](#intégration-home-assistant)
 - [Fabrication du PCB](#fabrication-du-pcb)
+- [Boîtier](#boîtier)
 - [Sécurité](#sécurité)
 - [Licence](#licence)
 
@@ -68,10 +72,11 @@ MaxPilot utilise **deux optocoupleurs MOC3041M** par canal, avec des **diodes 1N
 - Microcontrôleur ESP8266 (WeMos D1 Mini) avec WiFi intégré
 - Compatible ESPHome et Home Assistant
 - Alimentation AC/DC isolée (HLK-PM01, 5V)
-- Protection contre les surtensions (varistance)
+- Protection contre les surtensions (varistance MOV 275V)
 - Optocoupleurs à passage par zéro (MOC3041M) pour une commutation propre
 - Fusible de protection 1A
 - Thermostat intégré avec capteur de température externe (optionnel)
+- Boîtier 3D imprimable inclus
 
 ---
 
@@ -88,7 +93,7 @@ MaxPilot utilise **deux optocoupleurs MOC3041M** par canal, avec des **diodes 1N
 
 ## Câblage
 
-> **ATTENTION** : Coupez le courant au disjoncteur avant tout câblage !
+> ⚠️ **ATTENTION** : Coupez le courant au disjoncteur avant tout câblage !
 
 La carte se branche sur le bornier 3 points (J1). Le fil pilote de votre radiateur est le fil noir (ou parfois gris) présent dans la gaine électrique de votre radiateur.
 
@@ -99,13 +104,12 @@ La carte se branche sur le bornier 3 points (J1). Le fil pilote de votre radiate
                    └──┬──┴──┬──┴──┬──┘
                       │     │     │
                       │     │     └──── Fil pilote vers radiateur
-                      │     │           Pilot wire to radiator
                       │     │
-                      │     └────────── Neutre / Neutral (bleu/blue)
+                      │     └────────── Neutre (bleu)
                       │
-                      └──────────────── Phase / Live (marron ou rouge / brown or red)
+                      └──────────────── Phase (marron ou rouge)
 
-          Depuis le tableau électrique / From the electrical panel
+          Depuis le tableau électrique
 ```
 
 ---
@@ -119,21 +123,19 @@ Le schéma complet se trouve dans `hardware/kicad/MaxPilot.kicad_sch` (KiCad 9).
 ### Architecture
 
 ```
-Secteur AC ──► Fusible (F1) ──► Varistance (RV1) ──► HLK-PM01 (PS1) ──► 5V DC
-                                                            │
-                                                     WeMos D1 Mini (U1)
-                                                      │           │
-                                                  GPIO D3      GPIO D7
-                                                      │           │
-                                                  R1 (570Ω)   R2 (570Ω)
-                                                      │           │
-                                                  MOC3041M     MOC3041M
-                                                   (U2)         (U3)
-                                                      │           │
-                                                  D1 (1N4007) D2 (1N4007)
-                                                      │           │
-                                                  Canal 1      Canal 2
-                                                 Channel 1    Channel 2
+Secteur AC ──► F1 (fusible 1A) ──► RV1 (varistance) ──► PS1 (HLK-PM01) ──► 5V DC
+                                                               │
+                                                        U1 (WeMos D1 Mini)
+                                                         │            │
+                                                     GPIO D3       GPIO D7
+                                                         │            │
+                                                     R1 (570Ω)    R2 (570Ω)
+                                                         │            │
+                                                     U2 (MOC3041M) U3 (MOC3041M)
+                                                         │            │
+                                                     D1 (1N4007)  D2 (1N4007)
+                                                         │            │
+                                                      Canal 1       Canal 2
 ```
 
 ### Brochage
@@ -147,17 +149,17 @@ Secteur AC ──► Fusible (F1) ──► Varistance (RV1) ──► HLK-PM01 
 
 ## Nomenclature
 
-| Réf | Valeur | Boîtier | Qté | Description |
-|-----|--------|---------|-----|-------------|
-| F1 | 1A | Fuseholder_Blade_Mini_Keystone_3568 | 1 | Fusible |
-| C1 | 22µF 25V céramique | C_Disc_D8.0mm_W2.5mm_P5.00mm | 1 | Condensateur céramique |
-| U1 | WeMos D1 Mini | WEMOS_D1_mini_light | 1 | Microcontrôleur ESP8266 |
-| U2, U3 | MOC3041M | MOC3041M_DIP6_W7.62mm_NC5 | 2 | Optocoupleur triac (pin 5 NC — à couper avant soudure) |
-| R1, R2 | 570Ω | R_Axial_DIN0207 | 2 | Résistances |
-| D1, D2 | 1N4007 | D_DO-41_SOD81 | 2 | Diodes de protection |
-| RV1 | MOV 275V (14D431K) | RV_Disc_D12mm | 1 | Varistance 275V (protection surtension) |
-| PS1 | HLK-PM01 | Converter_ACDC_HiLink_HLK-PMxx | 1 | Alimentation AC/DC 5V |
-| J1 | Bornier 3 pts 7.62mm | TerminalBlock_Generic_1x03_P7.62mm_Horizontal | 1 | Connecteur (ex: Würth 691311400103, Phoenix MKDS 1,5/3-7,62) |
+| Réf | Qté | Valeur | Description |
+|-----|:---:|--------|-------------|
+| F1 | 1 | 1A | Fusible lame mini (Keystone 3568) |
+| C1 | 1 | 22µF 25V | Condensateur céramique |
+| U1 | 1 | WeMos D1 Mini | Microcontrôleur ESP8266 |
+| U2, U3 | 2 | MOC3041M | Optocoupleur triac — couper la pin 5 avant soudure |
+| R1, R2 | 2 | 570Ω | Résistances axiales |
+| D1, D2 | 2 | 1N4007 | Diodes de protection |
+| RV1 | 1 | MOV 275V | Varistance 14D431K (protection surtension) |
+| PS1 | 1 | HLK-PM01 | Alimentation AC/DC 5V isolée |
+| J1 | 1 | Bornier 3pts 7,62mm | ex : Würth 691311400103, Phoenix MKDS 1,5/3-7,62 |
 
 ---
 
@@ -261,27 +263,31 @@ automation:
 
 ## Fabrication du PCB
 
-Fichiers Gerber prêts pour JLCPCB, PCBWay, etc.
+Fichiers Gerber prêts pour JLCPCB, PCBWay, etc. — dans `hardware/gerber/`.
 
 | Face avant | Face arrière |
 |:--:|:--:|
 | ![PCB Face avant](images/MaxPilot-pcb-front.svg) | ![PCB Face arrière](images/MaxPilot-pcb-back.svg) |
 
-Fichiers dans `hardware/gerber/` :
-- `MaxPilot-F_Cu.gtl` / `MaxPilot-B_Cu.gbl`
-- `MaxPilot-F_Mask.gts` / `MaxPilot-B_Mask.gbs`
-- `MaxPilot-F_Silkscreen.gto` / `MaxPilot-B_Silkscreen.gbo`
-- `MaxPilot-Edge_Cuts.gm1`
-- `MaxPilot.drl` — fichier de perçage (PTH+NPTH unifié)
-- `MaxPilot-job.gbrjob`
+---
+
+## Boîtier
+
+Un boîtier 3D imprimable est inclus dans `hardware/enclosure/`. Imprimez sans supports en PLA, face ouverte vers le haut.
+
+- **Vis PCB** : 4× M2×6 (fixation sur les plots)
+- **Vis couvercle** : 4× M3×13 (auto-taraudant dans les piliers)
 
 ---
 
 ## Sécurité
 
-> **ATTENTION : Ce projet implique des tensions secteur (230V AC). Risque d'électrocution mortelle. Coupez toujours le courant avant toute intervention. La carte doit être installée dans un boîtier fermé.**
+> ⚠️ **ATTENTION : Ce projet implique des tensions secteur (230V AC). Risque d'électrocution mortelle.**
+> Coupez toujours le courant avant toute intervention. La carte doit être installée dans un boîtier fermé.
 
-Le PCB v2.0 respecte les distances d'isolement IPC-2221B et IEC 62368-1 (clearance ≥ 3,0 mm mains↔BT, creepage ≥ 5,0 mm).
+Le PCB v2.0 respecte les distances d'isolement IPC-2221B et IEC 62368-1 :
+- Clearance mains ↔ basse tension : ≥ 3,0 mm
+- Ligne de fuite (*creepage*) : ≥ 5,0 mm
 
 ---
 
