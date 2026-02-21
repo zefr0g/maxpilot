@@ -536,6 +536,10 @@
       {
         "netclass": "Line",
         "pattern": "Net-(D2-Pad2)"
+      },
+      {
+        "netclass": "Line",
+        "pattern": "LINE_P"
       }
     ]
   },
