@@ -28,7 +28,7 @@ mh = [[2.54, 2.54], [96.52, 2.54], [2.54, 35.56], [96.52, 35.56]];
 // ── Box ───────────────────────────────────────────────────────
 wall     = 2.0;  // wall thickness
 floor_t  = 3.0;  // base floor thickness
-gap      = 2.5;  // clearance around PCB (was 6.0 — reduced for tighter footprint)
+gap      = 2.7;  // clearance around PCB (was 6.0 — reduced for tighter footprint)
 standoff = 5.0;  // boss height = PCB bottom clearance above floor
 comp_h   = 16.0; // tallest component above PCB
 top_clr  = 2.0;  // clearance above tallest component
@@ -42,7 +42,7 @@ engrave_d = 0.5;  // engraving depth for lid text
 // 1 mm ring on the underside of the lid that drops into the box
 // interior to locate it precisely before screwing down.
 lip_h      = 1.0;   // lip protrusion below lid plate
-lip_clr    = 0.25;  // radial clearance between lip and box interior
+lip_clr    = 3.0;   // clearance between lip strips and box interior walls
 lip_wall_t = 1.5;   // ring wall thickness
 
 // ── M2 PCB bosses (at PCB mounting hole positions) ────────────
@@ -182,25 +182,28 @@ module lid() {
             rounded_rect(ext_l, ext_w, lid_t, corner_r);
 
             // ── Alignment lip ─────────────────────────────────
-            // 1 mm ring that drops into the box interior to locate
-            // the lid before the screws are tightened.
-            translate([0, 0, -lip_h])
-                difference() {
-                    // Solid ring outer profile
-                    translate([wall + lip_clr, wall + lip_clr, 0])
-                        cube([int_l - 2*lip_clr, int_w - 2*lip_clr, lip_h]);
-                    // Hollow interior
-                    translate([wall + lip_clr + lip_wall_t,
-                               wall + lip_clr + lip_wall_t, -0.01])
-                        cube([int_l - 2*lip_clr - 2*lip_wall_t,
-                              int_w - 2*lip_clr - 2*lip_wall_t,
-                              lip_h + 0.02]);
-                    // Notch at each corner pillar so the lip clears
-                    // the pillar rim when the lid is pressed down
-                    for (i = [0:3])
-                        translate([lp(i)[0], lp(i)[1], -0.01])
-                            cylinder(d = pillar_rim_d + 0.5, h = lip_h + 0.02);
-                }
+            // Four separate strips (not a closed ring) that drop 1 mm
+            // into the box interior. Stopping before the corner pillar
+            // zones avoids any collision with the hull fillet geometry.
+            // stop margin past the pillar rim edge on each side
+            let(ls = pillar_rim_d/2 + 1.0) {
+                // Left strip
+                translate([wall + lip_clr,
+                           wall + lip_clr + ls, -lip_h])
+                    cube([lip_wall_t, int_w - 2*(lip_clr + ls), lip_h]);
+                // Right strip
+                translate([ext_l - wall - lip_clr - lip_wall_t,
+                           wall + lip_clr + ls, -lip_h])
+                    cube([lip_wall_t, int_w - 2*(lip_clr + ls), lip_h]);
+                // Front strip
+                translate([wall + lip_clr + ls,
+                           wall + lip_clr, -lip_h])
+                    cube([int_l - 2*(lip_clr + ls), lip_wall_t, lip_h]);
+                // Back strip
+                translate([wall + lip_clr + ls,
+                           ext_w - wall - lip_clr - lip_wall_t, -lip_h])
+                    cube([int_l - 2*(lip_clr + ls), lip_wall_t, lip_h]);
+            }
         }
 
         // M3 clearance holes + counterbores aligned with corner pillars
