@@ -1,5 +1,5 @@
 /* ================================================================
-   MaxPilot PCB Enclosure — v2.3
+   MaxPilot PCB Enclosure — v2.4
    PCB: 99.06 × 38.1 mm, 4× M2 mounting holes
    Mains wire entry: left wall (J1 terminal block)
 
@@ -8,7 +8,7 @@
      2. Print lid (inner face on build plate, no supports needed)
      3. Drop PCB straight into box — no tilt needed
      4. Secure PCB with 4× M2×6 pan-head screws (self-tapping in PLA)
-     5. Place lid, screw down with 4× M3×13 pan-head screws
+     5. Place lid (lip locates it), screw down with 4× M3×13 pan-head screws
 
    Hardware:
      4× M2×6  pan-head screws  (PCB  → M2 bosses at floor)
@@ -26,17 +26,24 @@ pcb_t = 1.6;     // PCB thickness
 mh = [[2.54, 2.54], [96.52, 2.54], [2.54, 35.56], [96.52, 35.56]];
 
 // ── Box ───────────────────────────────────────────────────────
-wall     = 2.5;  // wall thickness
+wall     = 2.0;  // wall thickness
 floor_t  = 3.0;  // base floor thickness
-gap      = 6.0;  // clearance around PCB — large enough for straight insertion
+gap      = 2.5;  // clearance around PCB (was 6.0 — reduced for tighter footprint)
 standoff = 5.0;  // boss height = PCB bottom clearance above floor
-comp_h   = 19.0; // tallest component above PCB (trimmed 3 mm from measured fit)
+comp_h   = 16.0; // tallest component above PCB
 top_clr  = 2.0;  // clearance above tallest component
 corner_r = 3.0;  // exterior corner radius (vertical edges)
 
 // ── Lid ───────────────────────────────────────────────────────
 lid_t     = 3.0;  // lid plate thickness
 engrave_d = 0.5;  // engraving depth for lid text
+
+// ── Lid alignment lip ─────────────────────────────────────────
+// 1 mm ring on the underside of the lid that drops into the box
+// interior to locate it precisely before screwing down.
+lip_h      = 1.0;   // lip protrusion below lid plate
+lip_clr    = 0.25;  // radial clearance between lip and box interior
+lip_wall_t = 1.5;   // ring wall thickness
 
 // ── M2 PCB bosses (at PCB mounting hole positions) ────────────
 boss_d   = 5.5;  // boss outer diameter
@@ -46,10 +53,9 @@ m2_pilot = 1.8;  // M2 self-tapping pilot hole diameter
 // ── Corner lid pillars ────────────────────────────────────────
 // Positioned at the 4 interior corners — completely outside the
 // PCB footprint so the PCB drops in straight without obstruction.
-// Wide at rim (fused to both corner walls), narrow at foot.
-pillar_h      = 12.0; // height from box rim downward
-pillar_rim_d  =  5.0; // diameter at rim (top, wide — merges with corner walls)
-pillar_foot_d =  3.0; // diameter at foot (bottom, narrow)
+// Reduced diameter (3.5 mm) matched to the tighter gap.
+pillar_rim_d  = 3.5; // diameter at rim (wide end, top)
+pillar_foot_d = 2.0; // diameter at foot (narrow end, bottom)
 
 // Lid / M3 screw parameters
 m3_pilot  = 2.5;  // M3 self-tapping pilot hole diameter
@@ -64,16 +70,32 @@ j1_cw  = 22.0;
 j1_cz0 = standoff + 1.0;  // wire entry starts just above PCB surface
 j1_ch  = pcb_t + 6.0;    // 7.6 mm — enough for 3 × 2.5 mm² leads
 
+// ── HLK-PM01 vent grid ────────────────────────────────────────
+// Component centre from KiCad PCB (relative to PCB corner):
+//   X = 45.72 − 12.70 = 33.02 mm   Y = 36.905 − 12.70 = 24.205 mm
+// Physical footprint: 34 × 20 mm
+hlk_pcb_cx = 33.02;    // HLK centre along PCB length axis
+hlk_pcb_cy = 24.205;   // HLK centre along PCB width axis
+vent_n  = 5;    // number of vent slots
+vent_sl = 26.0; // slot length (X direction)
+vent_sw = 1.5;  // slot width
+vent_sp = 3.0;  // slot pitch (centre-to-centre)
+
 // ── Derived ───────────────────────────────────────────────────
 int_l  = pcb_l + 2*gap;
 int_w  = pcb_w + 2*gap;
 int_h  = standoff + pcb_t + comp_h + top_clr;
+pillar_h = int_h;  // full height — pillar runs from floor to rim
 ext_l  = int_l + 2*wall;
 ext_w  = int_w + 2*wall;
 base_h = floor_t + int_h;
 
-px0 = wall + gap;
-py0 = wall + gap;
+px0 = wall + gap;   // PCB X origin in world coords
+py0 = wall + gap;   // PCB Y origin in world coords
+
+// HLK-PM01 centre in world / lid coords
+hlk_cx = px0 + hlk_pcb_cx;
+hlk_cy = py0 + hlk_pcb_cy;
 
 // PCB boss positions (world coords, at PCB mounting holes)
 function bp(i) = [px0 + mh[i][0], py0 + mh[i][1]];
@@ -155,18 +177,52 @@ module base() {
 // ── Lid ───────────────────────────────────────────────────────
 module lid() {
     difference() {
-        rounded_rect(ext_l, ext_w, lid_t, corner_r);
+        union() {
+            // Main lid plate
+            rounded_rect(ext_l, ext_w, lid_t, corner_r);
+
+            // ── Alignment lip ─────────────────────────────────
+            // 1 mm ring that drops into the box interior to locate
+            // the lid before the screws are tightened.
+            translate([0, 0, -lip_h])
+                difference() {
+                    // Solid ring outer profile
+                    translate([wall + lip_clr, wall + lip_clr, 0])
+                        cube([int_l - 2*lip_clr, int_w - 2*lip_clr, lip_h]);
+                    // Hollow interior
+                    translate([wall + lip_clr + lip_wall_t,
+                               wall + lip_clr + lip_wall_t, -0.01])
+                        cube([int_l - 2*lip_clr - 2*lip_wall_t,
+                              int_w - 2*lip_clr - 2*lip_wall_t,
+                              lip_h + 0.02]);
+                    // Notch at each corner pillar so the lip clears
+                    // the pillar rim when the lid is pressed down
+                    for (i = [0:3])
+                        translate([lp(i)[0], lp(i)[1], -0.01])
+                            cylinder(d = pillar_rim_d + 0.5, h = lip_h + 0.02);
+                }
+        }
 
         // M3 clearance holes + counterbores aligned with corner pillars
+        // Extended downward through the lip so the screw passes cleanly
         for (i = [0:3]) {
-            translate([lp(i)[0], lp(i)[1], -0.01])
-                cylinder(d=lid_clr_d, h=lid_t + 0.02);
+            translate([lp(i)[0], lp(i)[1], -lip_h - 0.01])
+                cylinder(d=lid_clr_d, h=lid_t + lip_h + 0.02);
             translate([lp(i)[0], lp(i)[1], lid_t - lid_cbore_h])
                 cylinder(d=lid_cbore_d, h=lid_cbore_h + 0.01);
         }
 
-        // "MaxPilot" engraved on outer face
-        translate([ext_l/2, ext_w/2, lid_t - engrave_d])
+        // ── HLK-PM01 vent slots ───────────────────────────────
+        // Horizontal slots through the lid above the power module.
+        // Centred on lid X axis, lower quarter in Y (centre-down).
+        for (k = [-(vent_n-1)/2 : 1 : (vent_n-1)/2])
+            translate([ext_l/2 - vent_sl/2,
+                       ext_w/4 + k*vent_sp - vent_sw/2,
+                       -0.01])
+                cube([vent_sl, vent_sw, lid_t + 0.02]);
+
+        // "MaxPilot" engraved on outer face — centred horizontally, upper quarter
+        translate([ext_l/2, ext_w*3/4, lid_t - engrave_d])
             linear_extrude(engrave_d + 0.01)
                 text("MaxPilot", size=8, halign="center", valign="center",
                      font="Liberation Sans:style=Bold");
@@ -192,3 +248,5 @@ echo(str("Base height:  ", base_h, " mm"));
 echo(str("PCB clearance: ", gap, " mm each side"));
 echo(str("Lid screws: 4× M3×", ceil(lid_t + m3_depth), " pan-head self-tapping"));
 echo(str("PCB screws: 4× M2×6 pan-head self-tapping"));
+echo(str("HLK-PM01 vent: ", vent_n, "× ", vent_sl, "×", vent_sw, " mm slots at ",
+         vent_sp, " mm pitch"));
