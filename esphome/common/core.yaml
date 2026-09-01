@@ -1,28 +1,41 @@
+# Shared base configuration: board, API, OTA, WiFi fallback AP, diagnostics.
+# Nothing here references a custom !secret so this package can be pulled in
+# remotely (ESPHome dashboard "adopt" flow). WiFi credentials and the API
+# encryption key are set in the per-device YAML (see ../maxpilot_ch1.yaml).
+
+esp8266:
+  board: d1_mini
+  restore_from_flash: true
+
+dashboard_import:
+  package_import_url: github://zefr0g/maxpilot/esphome/maxpilot_ch1.yaml@main
+  import_full_config: false
+
 api:
-  encryption:
-    key: !secret api_encryption_key
-  custom_services: true
 
 ota:
   - platform: esphome
-    password: !secret ota_password
 
 logger:
 
 captive_portal:
 
-substitutions:
-  uptime_name: "Uptime"
-  wifi_signal_name: "WiFi Signal"
-  version_name: "ESPHome Version"
+wifi:
+  power_save_mode: NONE
+  # Fallback hotspot (captive portal) if the WiFi connection fails
+  ap:
+    ssid: "MaxPilot Fallback"
 
 sensor:
   - platform: uptime
-    name: ${uptime_name}
+    name: "Uptime"
+    entity_category: diagnostic
   - platform: wifi_signal
-    name: ${wifi_signal_name}
+    name: "WiFi Signal"
     update_interval: 60s
+    entity_category: diagnostic
 
 text_sensor:
   - platform: version
-    name: ${version_name}
+    name: "ESPHome Version"
+    entity_category: diagnostic

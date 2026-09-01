@@ -1,10 +1,21 @@
-# Fil pilote climate controller.
-# Requires a temperature sensor to be configured (temp_sensor_entity).
-# Automatically switches between Confort and Éco based on room temperature.
+# Optional thermostat. Imports a room temperature sensor from Home Assistant
+# and toggles the pilot wire between Confort (heating) and Éco (idle) around
+# the setpoint. Requires the substitution `temp_sensor_entity`.
 #
-# Contrôleur climatique fil pilote.
-# Nécessite un capteur de température configuré (temp_sensor_entity).
-# Bascule automatiquement entre Confort et Éco selon la température de la pièce.
+# Thermostat optionnel. Importe un capteur de température depuis Home
+# Assistant et bascule le fil pilote entre Confort (chauffe) et Éco (repos)
+# autour de la consigne. Nécessite la substitution `temp_sensor_entity`.
+
+sensor:
+  - platform: homeassistant
+    name: "Température ${ch_name}"
+    id: room_temp
+    entity_id: ${temp_sensor_entity}
+    unit_of_measurement: "°C"
+    device_class: temperature
+    accuracy_decimals: 1
+    filters:
+      - filter_out: nan
 
 climate:
   - platform: thermostat
@@ -21,30 +32,20 @@ climate:
     min_heating_run_time: 5min
     heat_deadband: 0.5
     heat_overrun: 0.5
+    # The select drives the SSRs, so every mode change goes through it and
+    # Home Assistant always shows the real pilot wire state.
     heat_action:
-      - lambda: |-
-          // Confort: SSR1 OFF, SSR2 OFF
-          id(ssr1).turn_off();
-          id(ssr2).turn_off();
-          auto call = id(fil_pilote_select).make_call();
-          call.set_option("Confort");
-          call.perform();
+      - select.set:
+          id: fil_pilote_select
+          option: "Confort"
     idle_action:
-      - lambda: |-
-          // Éco: SSR1 ON, SSR2 ON
-          id(ssr1).turn_on();
-          id(ssr2).turn_on();
-          auto call = id(fil_pilote_select).make_call();
-          call.set_option("Éco");
-          call.perform();
+      - select.set:
+          id: fil_pilote_select
+          option: "Éco"
     off_mode:
-      - lambda: |-
-          // Arrêt: SSR1 OFF, SSR2 ON
-          id(ssr1).turn_off();
-          id(ssr2).turn_on();
-          auto call = id(fil_pilote_select).make_call();
-          call.set_option("Arrêt");
-          call.perform();
+      - select.set:
+          id: fil_pilote_select
+          option: "Arrêt"
     default_preset: Confort
     preset:
       - name: Confort

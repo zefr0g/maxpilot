@@ -1,29 +1,38 @@
-# Example: MaxPilot with room temperature sensor and climate control.
-# The temperature is imported from an existing HA sensor entity
-# (Zigbee, BLE, WiFi, etc.) and a thermostat climate entity automatically
-# switches between Confort and Éco based on room temperature.
+# MaxPilot with room temperature sensor and thermostat.
+# The temperature is imported from an existing Home Assistant entity
+# (Zigbee, BLE, WiFi...) and a climate entity switches the pilot wire
+# between Confort and Éco around the setpoint.
 #
-# Exemple : MaxPilot avec capteur de température et contrôle climatique.
-# La température est importée depuis une entité HA existante
-# (Zigbee, BLE, WiFi, etc.) et une entité thermostat bascule automatiquement
-# entre Confort et Éco selon la température de la pièce.
+# MaxPilot avec capteur de température et thermostat.
+# La température est importée depuis une entité Home Assistant existante
+# (Zigbee, BLE, WiFi...) et une entité climate bascule le fil pilote
+# entre Confort et Éco autour de la consigne.
 
 substitutions:
-  name: maxpilot_ch1
+  name: maxpilot-salon
   ch_name: "Salon"
   ssr1_pin: D3
   ssr2_pin: D7
-  uptime_name: "Uptime Sensor"
-  # Replace with your actual HA temperature sensor entity ID
-  # Remplacez par l'entity ID de votre capteur de température HA
+  # Entity ID of your room temperature sensor in Home Assistant
+  # Entity ID de votre capteur de température dans Home Assistant
   temp_sensor_entity: "sensor.temperature_salon"
-  temp_sensor_internal: "false"
 
 packages:
   core: !include common/core.yaml
-  wifi: !include common/wifi.yaml
   maxpilot: !include common/maxpilot.yaml
   climate: !include common/maxpilot_climate.yaml
 
 esphome:
   name: ${name}
+  friendly_name: "MaxPilot ${ch_name}"
+  project:
+    name: "zefr0g.maxpilot"
+    version: "2.0.0"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+api:
+  encryption:
+    key: !secret api_encryption_key

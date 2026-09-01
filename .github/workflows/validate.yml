@@ -1,0 +1,48 @@
+name: Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  esphome:
+    name: ESPHome config
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install esphome
+      - name: Create dummy secrets
+        run: |
+          cat > esphome/secrets.yaml <<'YAML'
+          wifi_ssid: "ci"
+          wifi_password: "ci-password"
+          api_encryption_key: "gKpYHpjYPy7YvjB0QwZ1YQXbA8zY2Fj3cN3f1bKq0kE="
+          YAML
+      - name: Validate device configs
+        run: |
+          cp esphome/maxpilot_ch1_with_temp.yaml.example esphome/maxpilot_ch1_with_temp.yaml
+          esphome config esphome/maxpilot_ch1.yaml
+          esphome config esphome/maxpilot_ch1_with_temp.yaml
+      - name: Compile firmware
+        run: esphome compile esphome/maxpilot_ch1.yaml
+
+  kicad:
+    name: KiCad ERC / DRC
+    runs-on: ubuntu-latest
+    container: kicad/kicad:9.0
+    steps:
+      - uses: actions/checkout@v4
+      - name: ERC (advisory until no-connect flags / PWR_FLAG are added to the schematic)
+        continue-on-error: true
+        run: kicad-cli sch erc --exit-code-violations --severity-error --output erc.rpt hardware/kicad/MaxPilot.kicad_sch
+      - name: DRC
+        run: kicad-cli pcb drc --exit-code-violations --severity-error --output drc.rpt hardware/kicad/MaxPilot.kicad_pcb
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kicad-reports
+          path: "*.rpt"

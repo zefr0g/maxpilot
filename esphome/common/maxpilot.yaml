@@ -1,8 +1,17 @@
-esp8266:
-  board: d1_mini
-  restore_from_flash: true
+# Fil pilote driver: two opto-triacs (SSR1/SSR2) shape the 230 V signal
+# sent to the radiator's pilot wire.
+#
+#   Mode      | Pilot wire signal        | SSR1 | SSR2
+#   ----------|--------------------------|------|-----
+#   Confort   | none (open)              | OFF  | OFF
+#   Éco       | full sine wave           | ON   | ON
+#   Hors-gel  | negative half-wave only  | ON   | OFF
+#   Arrêt     | positive half-wave only  | OFF  | ON
+#
+# SSR1 = U2 + D1 (passes the negative half-wave), driven by ${ssr1_pin} (D3)
+# SSR2 = U3 + D2 (passes the positive half-wave), driven by ${ssr2_pin} (D7)
+# The GPIO sinks the opto LED current, hence `inverted: true`.
 
-# Raw SSR switches (hidden from Home Assistant)
 switch:
   - platform: gpio
     pin:
@@ -19,11 +28,7 @@ switch:
     internal: true
     restore_mode: RESTORE_DEFAULT_OFF
 
-# Fil pilote mode selector (visible in Home Assistant)
-# Confort  = full heat (thermostat setpoint)
-# Éco      = reduced (~3-4°C below setpoint)
-# Hors-gel = frost protection (~7°C)
-# Arrêt    = radiator off
+# Mode selector exposed to Home Assistant
 select:
   - platform: template
     name: "Fil Pilote ${ch_name}"
@@ -53,17 +58,3 @@ select:
               id(ssr1).turn_off();
               id(ssr2).turn_on();
             }
-
-# Optional: room temperature sensor imported from Home Assistant.
-# Set 'temp_sensor_entity' in your device YAML to enable (e.g. "sensor.temperature_salon").
-# Leave it as "none" to disable.
-sensor:
-  - platform: homeassistant
-    name: "Température ${ch_name}"
-    id: room_temp
-    entity_id: ${temp_sensor_entity}
-    internal: ${temp_sensor_internal}
-    unit_of_measurement: "°C"
-    accuracy_decimals: 1
-    filters:
-      - filter_out: nan

@@ -1,19 +1,30 @@
+# MaxPilot — one board, one pilot wire (several radiators can share it).
+# Copy this file per board and change `name` / `ch_name`.
+#
+# Flash:  esphome run esphome/maxpilot_ch1.yaml
+# Thermostat: see maxpilot_ch1_with_temp.yaml.example
+
 substitutions:
-  name: maxpilot_ch1
+  name: maxpilot-ch1
   ch_name: "CH1"
   ssr1_pin: D3
   ssr2_pin: D7
-  uptime_name: "Uptime Sensor"
-  # Room temperature sensor from Home Assistant (optional).
-  # Replace with your HA entity ID, e.g. "sensor.temperature_salon"
-  # Set to "none" and temp_sensor_internal to "true" to disable.
-  temp_sensor_entity: "none"
-  temp_sensor_internal: "true"
 
 packages:
   core: !include common/core.yaml
-  wifi: !include common/wifi.yaml
   maxpilot: !include common/maxpilot.yaml
 
 esphome:
   name: ${name}
+  friendly_name: "MaxPilot ${ch_name}"
+  project:
+    name: "zefr0g.maxpilot"
+    version: "2.0.0"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+api:
+  encryption:
+    key: !secret api_encryption_key
