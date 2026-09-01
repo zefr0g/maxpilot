@@ -33,7 +33,9 @@ jobs:
   kicad:
     name: KiCad ERC / DRC
     runs-on: ubuntu-latest
-    container: kicad/kicad:9.0
+    container:
+      image: kicad/kicad:9.0
+      options: --user root
     steps:
       - uses: actions/checkout@v4
       - name: ERC (advisory until no-connect flags / PWR_FLAG are added to the schematic)
