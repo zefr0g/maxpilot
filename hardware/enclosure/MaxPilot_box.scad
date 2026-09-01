@@ -65,9 +65,9 @@ lid_cbore_d = 6.5; // M3 pan-head counterbore diameter
 lid_cbore_h = 2.0; // counterbore depth
 
 // ── J1 terminal block cutout ─────────────────────────────────
-j1_cy  = 20.32;
+j1_cy  = 17.32;
 j1_cw  = 22.0;
-j1_cz0 = standoff + 1.0;  // wire entry starts just above PCB surface
+j1_cz0 = standoff + 5.0;  // wire entry starts just above PCB surface
 j1_ch  = pcb_t + 6.0;    // 7.6 mm — enough for 3 × 2.5 mm² leads
 
 // ── HLK-PM01 vent grid ────────────────────────────────────────
